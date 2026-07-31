@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { AnimauxStats } from "./_components/animaux-stats";
+import { AnimauxBanner } from "./_components/animaux-banner";
 import { AnimauxCard, type AnimauxView } from "./_components/animaux-card";
 import { AddAnimalDialog } from "./_components/add-animal-dialog";
 import { ANIMALS, type Animal } from "./_components/data";
@@ -55,8 +55,8 @@ export default function AnimauxPage() {
   const pageAnimals = filteredAnimals.slice(rangeStart - 1, rangeEnd);
 
   return (
-    <div className="flex flex-col gap-6">
-      <AnimauxStats />
+    <div className="overflow-hidden rounded-xl border border-border bg-card shadow-sm">
+      <AnimauxBanner />
       <AnimauxCard
         search={search}
         onSearchChange={handleSearchChange}

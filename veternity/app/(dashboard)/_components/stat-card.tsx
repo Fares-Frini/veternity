@@ -11,7 +11,7 @@ interface StatCardProps {
 
 export function StatCard({ value, label, icon, iconBg, iconColor }: StatCardProps) {
   return (
-    <div className="flex flex-col gap-3 rounded-lg border border-border bg-card p-5 shadow-sm">
+    <div className="flex flex-col gap-3 p-5">
       <div className={`flex h-10 w-10 items-center justify-center rounded-md ${iconBg}`}>
         <HugeiconsIcon icon={icon} className={`h-5 w-5 ${iconColor}`} strokeWidth={2.2} />
       </div>

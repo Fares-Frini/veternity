@@ -58,7 +58,7 @@ export function AnimauxCard({
   headerAction,
 }: AnimauxCardProps) {
   return (
-    <div className="overflow-hidden rounded-lg border border-border bg-card shadow-sm">
+    <div>
       {/* Toolbar */}
       <div className="flex flex-wrap items-center justify-between gap-4 border-b border-border p-4">
         <div className="relative w-full max-w-sm">
@@ -81,19 +81,26 @@ export function AnimauxCard({
             value={view}
             onValueChange={(value) => value && onViewChange(value as AnimauxView)}
             variant="outline"
-            className="rounded-md border-border bg-card"
+            spacing={0}
+            className="relative rounded-md border-border bg-muted p-1"
           >
+            <span
+              aria-hidden
+              className={`pointer-events-none absolute top-1 bottom-1 left-1 z-0 w-[calc(50%-4px)] rounded-sm bg-primary shadow-[inset_0_2px_4px_rgba(0,0,0,0.25),inset_0_-1px_1px_rgba(255,255,255,0.35)] transition-transform duration-300 ease-out ${
+                view === "grid" ? "translate-x-full" : "translate-x-0"
+              }`}
+            />
             <ToggleGroupItem
               value="list"
               aria-label="Vue liste"
-              className="data-[state=on]:bg-primary data-[state=on]:text-primary-foreground"
+              className="relative z-10 border-transparent bg-transparent data-[state=on]:bg-transparent data-[state=on]:text-primary-foreground"
             >
               <HugeiconsIcon icon={ListViewIcon} className="h-4 w-4" strokeWidth={2.2} />
             </ToggleGroupItem>
             <ToggleGroupItem
               value="grid"
               aria-label="Vue grille"
-              className="data-[state=on]:bg-primary data-[state=on]:text-primary-foreground"
+              className="relative z-10 border-transparent bg-transparent data-[state=on]:bg-transparent data-[state=on]:text-primary-foreground"
             >
               <HugeiconsIcon icon={GridViewIcon} className="h-4 w-4" strokeWidth={2.2} />
             </ToggleGroupItem>
