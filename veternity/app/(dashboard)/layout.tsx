@@ -4,7 +4,7 @@ import Header from "@/components/layout/header";
 
 export default function DashboardLayout({ children }: { children: ReactNode }) {
   return (
-    <div className="flex h-screen w-screen flex-col overflow-hidden bg-[#f7f8fc]">
+    <div className="flex h-screen w-screen flex-col overflow-hidden bg-background">
       <Header />
       <div className="flex min-h-0 flex-1">
         <SideNav />

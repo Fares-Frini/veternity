@@ -13,15 +13,17 @@ import {
   ReceiptIcon,
   SettingsIcon,
   SidebarIcon,
+  StethoscopeIcon,
   UsersIcon,
 } from "./icons";
 
 const NAV_ITEMS = [
   { href: "/", label: "Dashboard", icon: HomeIcon },
   { href: "/animaux", label: "Animaux", icon: PawIcon },
-  { href: "/appointments", label: "Appointments", icon: CalendarIcon },
+  { href: "/appointments", label: "Rendez-vous", icon: CalendarIcon },
+  { href: "/consultations", label: "Consultations", icon: StethoscopeIcon },
   { href: "/clients", label: "Clients", icon: UsersIcon },
-  { href: "/inventory", label: "Inventory", icon: BoxIcon },
+  { href: "/inventory", label: "Inventaire", icon: BoxIcon },
   { href: "/billing", label: "Billing", icon: ReceiptIcon },
   { href: "/reports", label: "Reports", icon: ChartIcon },
 ] as const;
@@ -38,11 +40,11 @@ function NavIconBadge({
   return (
     <span
       className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-md ${
-        isActive ? "bg-white" : ""
+        isActive ? "bg-sidebar-primary" : ""
       }`}
     >
       <Icon
-        className={`h-5 w-5 ${isActive ? "text-[#00998e]" : "text-white"}`}
+        className={`h-5 w-5 ${isActive ? "text-sidebar-primary-foreground" : "text-sidebar-foreground"}`}
         strokeWidth={ICON_STROKE_WIDTH}
       />
     </span>
@@ -55,8 +57,8 @@ export default function SideNav() {
 
   return (
     <aside
-      className={`flex h-full shrink-0 flex-col bg-[#00998e] transition-[width] duration-200 ${
-        collapsed ? "w-[72px]" : "w-64"
+      className={`flex h-full shrink-0 flex-col bg-sidebar transition-[width] duration-200 ${
+        collapsed ? "w-18" : "w-64"
       }`}
     >
       {/* Collapse toggle */}
@@ -66,7 +68,7 @@ export default function SideNav() {
           onClick={() => setCollapsed((v) => !v)}
           aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
           title={collapsed ? "Expand sidebar" : "Collapse sidebar"}
-          className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md text-white transition-colors hover:bg-white/10"
+          className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md text-sidebar-foreground transition-colors hover:bg-sidebar-accent"
         >
           <SidebarIcon className="h-5 w-5" strokeWidth={ICON_STROKE_WIDTH} />
         </button>
@@ -81,8 +83,8 @@ export default function SideNav() {
               key={href}
               href={href}
               title={collapsed ? label : undefined}
-              className={`flex items-center gap-3 rounded-md py-1.5 pr-3 text-sm font-medium text-white transition-colors ${
-                collapsed ? "justify-center pl-1.5" : "pl-1.5 hover:bg-white/10"
+              className={`flex items-center gap-3 rounded-md py-1.5 pr-3 text-sm font-medium text-sidebar-foreground transition-colors ${
+                collapsed ? "justify-center pl-1.5" : "pl-1.5 hover:bg-sidebar-accent"
               }`}
             >
               <NavIconBadge icon={Icon} isActive={isActive} />
@@ -93,12 +95,12 @@ export default function SideNav() {
       </nav>
 
       {/* Settings + sign out */}
-      <div className="flex flex-col gap-1 border-t border-white/15 px-3 py-4">
+      <div className="flex flex-col gap-1 border-t border-sidebar-border px-3 py-4">
         <Link
           href="/settings"
           title={collapsed ? "Settings" : undefined}
-          className={`flex items-center gap-3 rounded-md py-1.5 pr-3 text-sm font-medium text-white transition-colors ${
-            collapsed ? "justify-center pl-1.5" : "pl-1.5 hover:bg-white/10"
+          className={`flex items-center gap-3 rounded-md py-1.5 pr-3 text-sm font-medium text-sidebar-foreground transition-colors ${
+            collapsed ? "justify-center pl-1.5" : "pl-1.5 hover:bg-sidebar-accent"
           }`}
         >
           <NavIconBadge icon={SettingsIcon} isActive={pathname.startsWith("/settings")} />
@@ -107,12 +109,12 @@ export default function SideNav() {
         <button
           type="button"
           title={collapsed ? "Sign out" : undefined}
-          className={`flex items-center gap-3 rounded-md py-1.5 pr-3 text-left text-sm font-medium text-white transition-colors hover:bg-white/10 ${
+          className={`flex items-center gap-3 rounded-md py-1.5 pr-3 text-left text-sm font-medium text-sidebar-foreground transition-colors hover:bg-sidebar-accent ${
             collapsed ? "justify-center pl-1.5" : "pl-1.5"
           }`}
         >
           <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md">
-            <LogOutIcon className="h-5 w-5 text-white" strokeWidth={ICON_STROKE_WIDTH} />
+            <LogOutIcon className="h-5 w-5 text-sidebar-foreground" strokeWidth={ICON_STROKE_WIDTH} />
           </span>
           {!collapsed && "Sign out"}
         </button>

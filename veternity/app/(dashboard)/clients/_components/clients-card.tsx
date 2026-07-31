@@ -2,9 +2,8 @@
 
 import type { ReactNode } from "react";
 import { HugeiconsIcon } from "@hugeicons/react";
-import { GridViewIcon, ListViewIcon, Search01Icon } from "@hugeicons/core-free-icons";
+import { Search01Icon } from "@hugeicons/core-free-icons";
 import { Input } from "@/components/ui/input";
-import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import {
   Pagination,
@@ -15,22 +14,17 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
-import type { Animal } from "./data";
-import { AnimauxTable } from "./animaux-table";
-import { AnimauxGrid } from "./animaux-grid";
+import type { Client } from "./data";
+import { ClientsTable } from "./clients-table";
 import { getPageNumbers } from "./utils";
-
-export type AnimauxView = "list" | "grid";
 
 const PAGE_SIZE_OPTIONS = [5, 10, 20];
 
-interface AnimauxCardProps {
+interface ClientsCardProps {
   search: string;
   onSearchChange: (value: string) => void;
-  view: AnimauxView;
-  onViewChange: (view: AnimauxView) => void;
-  animals: Animal[];
-  pageAnimals: Animal[];
+  clients: Client[];
+  pageClients: Client[];
   page: number;
   totalPages: number;
   onPageChange: (page: number) => void;
@@ -41,13 +35,11 @@ interface AnimauxCardProps {
   headerAction?: ReactNode;
 }
 
-export function AnimauxCard({
+export function ClientsCard({
   search,
   onSearchChange,
-  view,
-  onViewChange,
-  animals,
-  pageAnimals,
+  clients,
+  pageClients,
   page,
   totalPages,
   onPageChange,
@@ -56,7 +48,7 @@ export function AnimauxCard({
   rangeStart,
   rangeEnd,
   headerAction,
-}: AnimauxCardProps) {
+}: ClientsCardProps) {
   return (
     <div className="overflow-hidden rounded-lg border border-border bg-card shadow-sm">
       {/* Toolbar */}
@@ -70,41 +62,16 @@ export function AnimauxCard({
           <Input
             value={search}
             onChange={(e) => onSearchChange(e.target.value)}
-            placeholder="Rechercher un animal, un propriétaire..."
+            placeholder="Rechercher un client, un email, un téléphone..."
             className="h-10 rounded-full border-border bg-muted pl-9 text-sm"
           />
         </div>
 
-        <div className="flex items-center gap-3">
-          <ToggleGroup
-            type="single"
-            value={view}
-            onValueChange={(value) => value && onViewChange(value as AnimauxView)}
-            variant="outline"
-            className="rounded-md border-border bg-card"
-          >
-            <ToggleGroupItem
-              value="list"
-              aria-label="Vue liste"
-              className="data-[state=on]:bg-primary data-[state=on]:text-primary-foreground"
-            >
-              <HugeiconsIcon icon={ListViewIcon} className="h-4 w-4" strokeWidth={2.2} />
-            </ToggleGroupItem>
-            <ToggleGroupItem
-              value="grid"
-              aria-label="Vue grille"
-              className="data-[state=on]:bg-primary data-[state=on]:text-primary-foreground"
-            >
-              <HugeiconsIcon icon={GridViewIcon} className="h-4 w-4" strokeWidth={2.2} />
-            </ToggleGroupItem>
-          </ToggleGroup>
-
-          {headerAction}
-        </div>
+        {headerAction}
       </div>
 
       {/* Content */}
-      {view === "list" ? <AnimauxTable animals={pageAnimals} /> : <div className="p-4"><AnimauxGrid animals={pageAnimals} /></div>}
+      <ClientsTable clients={pageClients} />
 
       {/* Footer: page size + pagination */}
       <div className="flex flex-wrap items-center justify-between gap-4 border-t border-border px-4 py-3">
@@ -123,7 +90,7 @@ export function AnimauxCard({
             </SelectContent>
           </Select>
           <span className="hidden sm:inline">
-            {animals.length === 0 ? "0" : `${rangeStart}–${rangeEnd}`} sur {animals.length}
+            {clients.length === 0 ? "0" : `${rangeStart}–${rangeEnd}`} sur {clients.length}
           </span>
         </div>
 

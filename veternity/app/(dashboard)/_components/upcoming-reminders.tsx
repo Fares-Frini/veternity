@@ -12,10 +12,10 @@ const REMINDERS = [
 
 export function UpcomingReminders() {
   return (
-    <Card className="rounded-lg border-[#eef0f5] shadow-sm">
+    <Card className="rounded-lg border-border shadow-sm">
       <CardHeader>
-        <CardTitle className="flex items-center gap-2 text-base font-bold text-[#1e2a4a]">
-          <BellIcon className="h-4.5 w-4.5 text-[#f5920a]" strokeWidth={2.2} />
+        <CardTitle className="flex items-center gap-2 text-base font-bold text-foreground">
+          <BellIcon className="h-4.5 w-4.5 text-status-warning" strokeWidth={2.2} />
           Rappels à venir
         </CardTitle>
       </CardHeader>
@@ -23,24 +23,24 @@ export function UpcomingReminders() {
         {REMINDERS.map(({ pet, reason, owner, date, done }) => (
           <div
             key={pet + reason}
-            className={`flex items-center justify-between gap-3 rounded-md border px-4 py-3 ${
-              done ? "border-[#eef0f5] bg-[#f7f8fc]" : "border-[#ffe8bf] bg-[#fff8ea]"
+            className={`flex items-center justify-between gap-3 rounded-md border-l-4 py-3 pr-4 pl-3.5 ${
+              done ? "border-border bg-muted" : "border-status-warning bg-status-warning-bg"
             }`}
           >
             <div className="flex items-center gap-3">
-              <Checkbox checked={done} className="data-checked:border-[#00998e] data-checked:bg-[#00998e]" />
+              <Checkbox checked={done} className="data-checked:border-primary data-checked:bg-primary" />
               <div>
-                <div className="flex items-center gap-1.5 text-sm font-semibold text-[#1e2a4a]">
-                  <PawIcon className="h-3.5 w-3.5 text-[#00998e]" strokeWidth={2.4} />
+                <div className="flex items-center gap-1.5 text-sm font-semibold text-foreground">
+                  <PawIcon className="h-3.5 w-3.5 text-primary" strokeWidth={2.4} />
                   {pet} — {reason}
                 </div>
-                <div className="mt-0.5 text-xs text-[#7b88a8]">
+                <div className="mt-0.5 text-xs text-muted-foreground">
                   {owner} · {date}
                 </div>
               </div>
             </div>
             {!done && (
-              <Badge className="shrink-0 bg-[#fdecc8] text-[#a8660a]" variant="secondary">
+              <Badge variant="warning" className="shrink-0">
                 À faire
               </Badge>
             )}

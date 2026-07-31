@@ -15,14 +15,14 @@ const data = [
 ];
 
 const chartConfig = {
-  consultations: { label: "Consultations", color: "#00998e" },
+  consultations: { label: "Consultations", color: "var(--chart-1)" },
 } satisfies ChartConfig;
 
 export function ConsultationsChart() {
   return (
-    <Card className="rounded-lg border-[#eef0f5] shadow-sm">
+    <Card className="rounded-lg border-border shadow-sm">
       <CardHeader>
-        <CardTitle className="text-base font-bold text-[#1e2a4a]">Consultations / mois</CardTitle>
+        <CardTitle className="text-base font-bold text-foreground">Consultations / mois</CardTitle>
         <CardDescription>Année 2026</CardDescription>
       </CardHeader>
       <CardContent>

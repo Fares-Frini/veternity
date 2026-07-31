@@ -2,10 +2,10 @@ import type { IconSvgElement } from "@hugeicons/react";
 import { BirdIcon, CarrotIcon, CatIcon, FootprintsIcon } from "@hugeicons/core-free-icons";
 
 export const SPECIES_COLOR: Record<string, string> = {
-  Chat: "bg-[#f1eafe] text-[#7c5cf0]",
-  Chien: "bg-[#e8f1ff] text-[#3b82f6]",
-  Lapin: "bg-[#fff1e0] text-[#f5920a]",
-  Oiseau: "bg-[#e3f5f2] text-[#00998e]",
+  Chat: "bg-status-purple-bg text-status-purple",
+  Chien: "bg-status-info-bg text-status-info",
+  Lapin: "bg-status-warning-bg text-status-warning",
+  Oiseau: "bg-secondary text-secondary-foreground",
 };
 
 /** The free icon set has no dog/rabbit icons, so footprints/carrot stand in. */

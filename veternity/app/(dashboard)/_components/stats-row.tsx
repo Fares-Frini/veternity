@@ -9,12 +9,12 @@ import {
 import { StatCard } from "./stat-card";
 
 const STATS = [
-  { value: 142, label: "Total Animaux", icon: Bone02Icon, iconBg: "bg-[#e3f5f2]", iconColor: "text-[#00998e]" },
-  { value: 89, label: "Total Clients", icon: UserGroupIcon, iconBg: "bg-[#f1eafe]", iconColor: "text-[#7c5cf0]" },
-  { value: 98, label: "Vaccinés", icon: VaccineIcon, iconBg: "bg-[#e8f1ff]", iconColor: "text-[#3b82f6]" },
-  { value: 54, label: "Stérilisés", icon: Scissor01Icon, iconBg: "bg-[#fff1e0]", iconColor: "text-[#f5920a]" },
-  { value: 7, label: "RDV du jour", icon: Calendar03Icon, iconBg: "bg-[#e8f8ec]", iconColor: "text-[#16a34a]" },
-  { value: 3, label: "Stock faible", icon: AlertDiamondIcon, iconBg: "bg-[#fde8ea]", iconColor: "text-[#e11d48]" },
+  { value: 142, label: "Total Animaux", icon: Bone02Icon, iconBg: "bg-secondary", iconColor: "text-secondary-foreground" },
+  { value: 89, label: "Total Clients", icon: UserGroupIcon, iconBg: "bg-status-purple-bg", iconColor: "text-status-purple" },
+  { value: 98, label: "Vaccinés", icon: VaccineIcon, iconBg: "bg-status-info-bg", iconColor: "text-status-info" },
+  { value: 54, label: "Stérilisés", icon: Scissor01Icon, iconBg: "bg-status-warning-bg", iconColor: "text-status-warning" },
+  { value: 7, label: "RDV du jour", icon: Calendar03Icon, iconBg: "bg-status-success-bg", iconColor: "text-status-success" },
+  { value: 3, label: "Stock faible", icon: AlertDiamondIcon, iconBg: "bg-status-danger-bg", iconColor: "text-status-danger" },
 ] as const;
 
 export function StatsRow() {

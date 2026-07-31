@@ -5,18 +5,21 @@ import { AnimauxStats } from "./_components/animaux-stats";
 import { AnimauxCard, type AnimauxView } from "./_components/animaux-card";
 import { AddAnimalDialog } from "./_components/add-animal-dialog";
 import { ANIMALS, type Animal } from "./_components/data";
+import { CLIENTS, type Client } from "../clients/_components/data";
 
 export default function AnimauxPage() {
   const [animals, setAnimals] = useState<Animal[]>(ANIMALS);
+  const [clients, setClients] = useState<Client[]>(CLIENTS);
   const [search, setSearch] = useState("");
   const [view, setView] = useState<AnimauxView>("list");
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
 
-  const owners = useMemo(
-    () => [...new Set(animals.map((animal) => animal.owner))].sort(),
-    [animals]
-  );
+  const owners = useMemo(() => clients.map((client) => client.name).sort(), [clients]);
+
+  const handleAddClient = (client: Client) => {
+    setClients((prev) => [client, ...prev]);
+  };
 
   const filteredAnimals = useMemo(() => {
     const query = search.trim().toLowerCase();
@@ -68,7 +71,7 @@ export default function AnimauxPage() {
         onPageSizeChange={handlePageSizeChange}
         rangeStart={rangeStart}
         rangeEnd={rangeEnd}
-        headerAction={<AddAnimalDialog owners={owners} onAdd={handleAddAnimal} />}
+        headerAction={<AddAnimalDialog owners={owners} onAdd={handleAddAnimal} onAddClient={handleAddClient} />}
       />
     </div>
   );

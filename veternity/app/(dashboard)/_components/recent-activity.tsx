@@ -4,36 +4,36 @@ import { CalendarIcon, PawIcon, PillIcon, ReceiptIcon, StethoscopeIcon } from "@
 const ACTIVITY = [
   {
     icon: StethoscopeIcon,
-    iconBg: "bg-[#e3f5f2]",
-    iconColor: "text-[#00998e]",
+    iconBg: "bg-secondary",
+    iconColor: "text-secondary-foreground",
     title: "Luna (Chat persan) — Otite externe",
     subtitle: "09:00 · Consultation · Dr. Kadiri",
   },
   {
     icon: CalendarIcon,
-    iconBg: "bg-[#e8f1ff]",
-    iconColor: "text-[#3b82f6]",
+    iconBg: "bg-status-info-bg",
+    iconColor: "text-status-info",
     title: "Rex (Labrador) — RDV confirmé",
     subtitle: "10:30 · Rendez-vous · Dr. Benkirane",
   },
   {
     icon: PillIcon,
-    iconBg: "bg-[#fde8ea]",
-    iconColor: "text-[#e11d48]",
+    iconBg: "bg-status-danger-bg",
+    iconColor: "text-status-danger",
     title: "Prescription — Apoquel 16mg pour Bella",
     subtitle: "11:15 · Prescription · Dr. Kadiri",
   },
   {
     icon: PawIcon,
-    iconBg: "bg-[#f1eafe]",
-    iconColor: "text-[#7c5cf0]",
+    iconBg: "bg-status-purple-bg",
+    iconColor: "text-status-purple",
     title: "Nouvel animal — Mango (Perroquet) enregistré",
     subtitle: "14:00 · Nouvel animal · Secrétariat",
   },
   {
     icon: ReceiptIcon,
-    iconBg: "bg-[#fff1e0]",
-    iconColor: "text-[#f5920a]",
+    iconBg: "bg-status-warning-bg",
+    iconColor: "text-status-warning",
     title: "Facture #F004 payée — Sara El Fassi (150 MAD)",
     subtitle: "15:30 · Paiement · Secrétariat",
   },
@@ -41,13 +41,13 @@ const ACTIVITY = [
 
 export function RecentActivity() {
   return (
-    <Card className="rounded-lg border-[#eef0f5] shadow-sm">
+    <Card className="rounded-lg border-border shadow-sm">
       <CardHeader>
-        <CardTitle className="text-base font-bold text-[#1e2a4a]">Activité récente</CardTitle>
+        <CardTitle className="text-base font-bold text-foreground">Activité récente</CardTitle>
       </CardHeader>
       <CardContent>
         <div className="relative">
-          <div className="absolute top-2 bottom-2 left-5 w-px bg-[#eef0f5]" />
+          <div className="absolute top-2 bottom-2 left-5 w-px bg-border" />
           <ul className="relative flex flex-col gap-5">
             {ACTIVITY.map(({ icon: Icon, iconBg, iconColor, title, subtitle }) => (
               <li key={title} className="flex items-start gap-3">
@@ -57,8 +57,8 @@ export function RecentActivity() {
                   <Icon className={`h-[18px] w-[18px] ${iconColor}`} strokeWidth={2.2} />
                 </span>
                 <div className="pt-1.5">
-                  <p className="text-sm font-semibold text-[#1e2a4a]">{title}</p>
-                  <p className="mt-0.5 text-xs text-[#7b88a8]">{subtitle}</p>
+                  <p className="text-sm font-semibold text-foreground">{title}</p>
+                  <p className="mt-0.5 text-xs text-muted-foreground">{subtitle}</p>
                 </div>
               </li>
             ))}

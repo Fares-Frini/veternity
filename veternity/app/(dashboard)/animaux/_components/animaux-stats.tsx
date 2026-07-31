@@ -2,10 +2,10 @@ import { Bone02Icon, Scissor01Icon, UserGroupIcon, VaccineIcon } from "@hugeicon
 import { StatCard } from "../../_components/stat-card";
 
 const STATS = [
-  { value: 142, label: "Total Animaux", icon: Bone02Icon, iconBg: "bg-[#e3f5f2]", iconColor: "text-[#00998e]" },
-  { value: 76, label: "Propriétaires", icon: UserGroupIcon, iconBg: "bg-[#f1eafe]", iconColor: "text-[#7c5cf0]" },
-  { value: 98, label: "Vaccinés", icon: VaccineIcon, iconBg: "bg-[#e8f1ff]", iconColor: "text-[#3b82f6]" },
-  { value: 54, label: "Stérilisés", icon: Scissor01Icon, iconBg: "bg-[#fff1e0]", iconColor: "text-[#f5920a]" },
+  { value: 142, label: "Total Animaux", icon: Bone02Icon, iconBg: "bg-secondary", iconColor: "text-secondary-foreground" },
+  { value: 76, label: "Propriétaires", icon: UserGroupIcon, iconBg: "bg-status-purple-bg", iconColor: "text-status-purple" },
+  { value: 98, label: "Vaccinés", icon: VaccineIcon, iconBg: "bg-status-info-bg", iconColor: "text-status-info" },
+  { value: 54, label: "Stérilisés", icon: Scissor01Icon, iconBg: "bg-status-warning-bg", iconColor: "text-status-warning" },
 ] as const;
 
 export function AnimauxStats() {

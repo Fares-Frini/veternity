@@ -15,14 +15,14 @@ const data = [
 ];
 
 const chartConfig = {
-  revenue: { label: "Revenus", color: "#f5920a" },
+  revenue: { label: "Revenus", color: "var(--chart-3)" },
 } satisfies ChartConfig;
 
 export function RevenueChart() {
   return (
-    <Card className="rounded-lg border-[#eef0f5] shadow-sm">
+    <Card className="rounded-lg border-border shadow-sm">
       <CardHeader>
-        <CardTitle className="text-base font-bold text-[#1e2a4a]">Revenus (MAD)</CardTitle>
+        <CardTitle className="text-base font-bold text-foreground">Revenus (MAD)</CardTitle>
         <CardDescription>Année 2026</CardDescription>
       </CardHeader>
       <CardContent>
