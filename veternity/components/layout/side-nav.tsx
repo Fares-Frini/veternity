@@ -26,7 +26,6 @@ const NAV_ITEMS = [
 
 const ICON_STROKE_WIDTH = 2.4;
 
-/** Label that fades + widens in, instead of popping in/out with the collapsed state. */
 function NavLabel({ collapsed, children }: { collapsed: boolean; children: React.ReactNode }) {
   return (
     <span
@@ -66,9 +65,9 @@ export default function SideNav() {
   const pathname = usePathname();
   const [collapsed, setCollapsed] = useState(false);
 
-  const asideRef = useRef<HTMLElement>(null);
   const navRef = useRef<HTMLElement>(null);
   const itemRefs = useRef(new Map<string, HTMLAnchorElement>());
+  const iconRefs = useRef(new Map<string, HTMLSpanElement>());
   const [indicator, setIndicator] = useState<{ top: number; left: number; width: number; height: number } | null>(
     null
   );
@@ -76,31 +75,23 @@ export default function SideNav() {
   const activeHref =
     NAV_ITEMS.find((item) => (item.href === "/" ? pathname === "/" : pathname.startsWith(item.href)))?.href ?? null;
 
-  // Click anywhere inside the sidebar to expand it; click anywhere outside to collapse it back.
-  useEffect(() => {
-    if (collapsed) return;
-
-    const handlePointerDown = (e: PointerEvent) => {
-      if (asideRef.current && !asideRef.current.contains(e.target as Node)) {
-        setCollapsed(true);
-      }
-    };
-
-    document.addEventListener("pointerdown", handlePointerDown);
-    return () => document.removeEventListener("pointerdown", handlePointerDown);
-  }, [collapsed]);
+  const stopExpandOnClick = (e: React.MouseEvent) => e.stopPropagation();
 
   useEffect(() => {
     const navEl = navRef.current;
-    const activeEl = activeHref ? itemRefs.current.get(activeHref) : null;
-    if (!navEl || !activeEl) {
+    const targetEl = activeHref
+      ? collapsed
+        ? iconRefs.current.get(activeHref)
+        : itemRefs.current.get(activeHref)
+      : null;
+    if (!navEl || !targetEl) {
       setIndicator(null);
       return;
     }
 
     const measure = () => {
       const navRect = navEl.getBoundingClientRect();
-      const elRect = activeEl.getBoundingClientRect();
+      const elRect = targetEl.getBoundingClientRect();
       setIndicator({
         top: elRect.top - navRect.top + navEl.scrollTop,
         left: elRect.left - navRect.left,
@@ -111,27 +102,22 @@ export default function SideNav() {
 
     measure();
 
-    // The sidebar's width animates via CSS (the collapse transition), so the
-    // active item's box keeps changing for the duration of that transition —
-    // keep re-measuring every frame it does instead of only once up front.
     const resizeObserver = new ResizeObserver(measure);
     resizeObserver.observe(navEl);
-    resizeObserver.observe(activeEl);
+    resizeObserver.observe(targetEl);
 
     return () => resizeObserver.disconnect();
   }, [activeHref, collapsed]);
 
   return (
     <aside
-      ref={asideRef}
       onClick={() => {
         if (collapsed) setCollapsed(false);
       }}
-      className={`flex h-full shrink-0 flex-col bg-sidebar transition-[width] duration-300 ease-out ${
+      className={`flex h-full shrink-0 flex-col bg-sidebar transition-[width,background-color] duration-300 ease-out ${
         collapsed ? "w-18" : "w-64"
       }`}
     >
-      {/* Collapse toggle */}
       <div className={`flex items-center px-3 pt-4 ${collapsed ? "justify-center" : "justify-end"}`}>
         <button
           type="button"
@@ -147,9 +133,7 @@ export default function SideNav() {
         </button>
       </div>
 
-      {/* Nav links */}
       <nav ref={navRef} className="relative flex flex-1 flex-col gap-1.5 overflow-y-auto px-3 pt-2">
-        {/* Sliding highlight that follows the active item */}
         <span
           aria-hidden
           className="pointer-events-none absolute rounded-md bg-sidebar-primary shadow-[inset_0_3px_6px_rgba(0,0,0,0.4),inset_0_1px_2px_rgba(0,0,0,0.3),inset_0_-1px_1px_rgba(255,255,255,0.5)] transition-[top,left,width,height,opacity] duration-300 ease-out"
@@ -169,15 +153,22 @@ export default function SideNav() {
               key={href}
               href={href}
               title={collapsed ? label : undefined}
+              onClick={stopExpandOnClick}
               ref={(el) => {
                 if (el) itemRefs.current.set(href, el);
                 else itemRefs.current.delete(href);
               }}
-              className={`relative z-10 flex items-center gap-3 rounded-md py-1.5 pr-3 text-sm font-medium transition-colors duration-300 ease-out ${
+              className={`relative z-10 flex items-center gap-3 rounded-md py-1.5 text-sm font-medium transition-colors duration-300 ease-out ${
                 isActive ? "text-sidebar-primary-foreground" : "text-sidebar-foreground"
-              } ${collapsed ? "justify-center pl-1.5" : "pl-1.5 hover:bg-sidebar-accent"}`}
+              } ${collapsed ? "justify-center px-0" : "justify-start pl-1.5 pr-3 hover:bg-sidebar-accent"}`}
             >
-              <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md">
+              <span
+                ref={(el) => {
+                  if (el) iconRefs.current.set(href, el);
+                  else iconRefs.current.delete(href);
+                }}
+                className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md"
+              >
                 <Icon className="h-5 w-5" strokeWidth={ICON_STROKE_WIDTH} />
               </span>
               <NavLabel collapsed={collapsed}>{label}</NavLabel>
@@ -186,13 +177,13 @@ export default function SideNav() {
         })}
       </nav>
 
-      {/* Settings + sign out */}
-      <div className="flex flex-col gap-1 border-t border-sidebar-border px-3 py-4">
+      <div className="flex flex-col gap-1 border-t border-sidebar-border px-3 py-4 transition-colors duration-300 ease-out">
         <Link
           href="/settings"
           title={collapsed ? "Settings" : undefined}
-          className={`flex items-center gap-3 rounded-md py-1.5 pr-3 text-sm font-medium text-sidebar-foreground transition-colors duration-300 ease-out ${
-            collapsed ? "justify-center pl-1.5" : "pl-1.5 hover:bg-sidebar-accent"
+          onClick={stopExpandOnClick}
+          className={`flex items-center gap-3 rounded-md py-1.5 text-sm font-medium text-sidebar-foreground transition-colors duration-300 ease-out ${
+            collapsed ? "justify-center px-0" : "justify-start pl-1.5 pr-3 hover:bg-sidebar-accent"
           }`}
         >
           <NavIconBadge icon={SettingsIcon} isActive={pathname.startsWith("/settings")} />
@@ -201,8 +192,9 @@ export default function SideNav() {
         <button
           type="button"
           title={collapsed ? "Sign out" : undefined}
-          className={`flex items-center gap-3 rounded-md py-1.5 pr-3 text-left text-sm font-medium text-sidebar-foreground transition-colors duration-300 ease-out hover:bg-sidebar-accent ${
-            collapsed ? "justify-center pl-1.5" : "pl-1.5"
+          onClick={stopExpandOnClick}
+          className={`flex items-center gap-3 rounded-md py-1.5 text-left text-sm font-medium text-sidebar-foreground transition-colors duration-300 ease-out hover:bg-sidebar-accent ${
+            collapsed ? "justify-center px-0" : "justify-start pl-1.5 pr-3"
           }`}
         >
           <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md">

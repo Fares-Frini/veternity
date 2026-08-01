@@ -1,4 +1,3 @@
-/** Page numbers to render, with `null` standing in for an ellipsis. */
 export function getPageNumbers(current: number, total: number): (number | null)[] {
   if (total <= 7) return Array.from({ length: total }, (_, i) => i + 1);
 

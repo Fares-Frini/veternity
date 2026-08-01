@@ -8,7 +8,6 @@ export const SPECIES_COLOR: Record<string, string> = {
   Oiseau: "bg-secondary text-secondary-foreground",
 };
 
-/** The free icon set has no dog/rabbit icons, so footprints/carrot stand in. */
 export const SPECIES_ICON: Record<string, IconSvgElement> = {
   Chat: CatIcon,
   Chien: FootprintsIcon,
@@ -24,7 +23,6 @@ export function formatDate(date: string) {
   });
 }
 
-/** Page numbers to render, with `null` standing in for an ellipsis. */
 export function getPageNumbers(current: number, total: number): (number | null)[] {
   if (total <= 7) return Array.from({ length: total }, (_, i) => i + 1);
 

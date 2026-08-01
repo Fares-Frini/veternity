@@ -3,7 +3,6 @@
 import { useState, type FormEvent, type ReactNode } from "react";
 import { HugeiconsIcon, type IconSvgElement } from "@hugeicons/react";
 import {
-  Bone02Icon,
   Cancel01Icon,
   Calendar03Icon,
   Clock01Icon,
@@ -16,6 +15,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Popover, PopoverAnchor, PopoverContent } from "@/components/ui/popover";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { PawIcon, type IconComponent } from "@/components/layout/icons";
 import { ANIMALS } from "../../animaux/_components/data";
 import type { Appointment, AppointmentStatus } from "./data";
 import { VETS } from "./data";
@@ -31,11 +31,24 @@ const EMPTY_FORM = {
   status: "Confirmé" as AppointmentStatus,
 };
 
-function SectionLabel({ icon, title, hint }: { icon: IconSvgElement; title: string; hint: string }) {
+function SectionLabel({
+  icon,
+  title,
+  hint,
+}: {
+  icon: IconSvgElement | IconComponent;
+  title: string;
+  hint: string;
+}) {
+  const CustomIcon = typeof icon === "function" ? icon : null;
   return (
     <div className="flex items-center gap-2.5">
       <span className="flex h-7 w-7 items-center justify-center rounded-md bg-card text-muted-foreground shadow-sm">
-        <HugeiconsIcon icon={icon} className="h-3.5 w-3.5" strokeWidth={2.2} />
+        {CustomIcon ? (
+          <CustomIcon className="h-3.5 w-3.5" strokeWidth={2.2} />
+        ) : (
+          <HugeiconsIcon icon={icon as IconSvgElement} className="h-3.5 w-3.5" strokeWidth={2.2} />
+        )}
       </span>
       <div className="flex flex-col leading-tight">
         <span className="text-sm font-bold text-foreground">{title}</span>
@@ -102,7 +115,6 @@ export function AddAppointmentDialog({ onAdd, trigger }: AddAppointmentDialogPro
       </DialogTrigger>
 
       <DialogContent className="max-h-[92vh] w-full max-w-lg gap-0 overflow-y-auto rounded-lg p-0 sm:max-w-lg" showCloseButton={false}>
-        {/* Header fin */}
         <div className="relative flex items-center justify-between bg-primary px-6 py-1.5 text-primary-foreground">
           <DialogHeader className="gap-0">
             <DialogTitle className="text-sm font-bold text-primary-foreground">Ajouter un rendez-vous</DialogTitle>
@@ -120,7 +132,7 @@ export function AddAppointmentDialog({ onAdd, trigger }: AddAppointmentDialogPro
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-4 px-6 pt-5 pb-3">
           <div className="flex flex-col gap-4 rounded-xl border border-border bg-muted p-5">
-            <SectionLabel icon={Bone02Icon} title="Rendez-vous" hint="Animal, date et motif de la visite" />
+            <SectionLabel icon={PawIcon} title="Rendez-vous" hint="Animal, date et motif de la visite" />
 
             <div className="flex flex-col gap-1.5">
               <Label htmlFor="appointment-animal">Animal *</Label>

@@ -8,17 +8,19 @@ import CatBody from "./bodies/Cat";
 import CowBody from "./bodies/Cow";
 import DogBody from "./bodies/Dog";
 
+export type Who = "horse" | "cat" | "cow" | "dog";
+
 interface AnimatedCharactersProps {
   isTyping?: boolean;
   showPassword?: boolean;
   passwordLength?: number;
+  entrance?: boolean;
+  mirrored?: boolean;
+  characters?: Who[];
 }
-
-type Who = "horse" | "cat" | "cow" | "dog";
 
 const EYE = "#1F1F1F";
 
-/** Each animal's base eye position within its own body (px, same coordinate space as its SVG viewBox) */
 const FACE: Record<Who, { left: number; top: number }> = {
   horse: { left: 120, top: 90 },
   cat: { left: 68, top: 69 },
@@ -26,14 +28,8 @@ const FACE: Record<Who, { left: number; top: number }> = {
   dog: { left: 75, top: 38 },
 };
 
-/**
- * How far each animal's eyes drift with the cursor, as a fraction of the full
- * ±15px / ±10px range from calcPos(). Horse and cow have the least head margin
- * around their eyes, so they travel less to avoid sliding off the face.
- */
 const FACE_TRAVEL: Record<Who, number> = { horse: 0.5, cat: 1, cow: 0.5, dog: 1 };
 
-/** Face offset from the base position for each state */
 const POSE = {
   look: { horse: [10, 25], cat: [6, -20] } as Record<"horse" | "cat", [number, number]>,
   hide: { horse: [10, 25] } as Record<"horse", [number, number]>,
@@ -45,7 +41,6 @@ const POSE = {
   } as Record<Who, [number, number]>,
 };
 
-/** Resting gap between the two eyes, and how tight they draw together while the password is shown */
 const HORSE_EYE_GAP = 22;
 const HORSE_EYE_GAP_SHOW = 10;
 const DOG_EYE_GAP = 30;
@@ -53,6 +48,15 @@ const DOG_EYE_GAP_SHOW = 16;
 
 const HORSE_HEIGHT = 420;
 const HORSE_HEIGHT_STRETCHED = 465;
+
+const LAYOUT: Record<Who, { left: number; width: number; height: number; zIndex: number }> = {
+  cow: { left: 0, width: 243, height: 235, zIndex: 3 },
+  horse: { left: 105, width: 233, height: HORSE_HEIGHT, zIndex: 1 },
+  cat: { left: 235, width: 207, height: 250, zIndex: 2 },
+  dog: { left: 375, width: 180, height: 183, zIndex: 4 },
+};
+
+const ALL_CHARACTERS: Who[] = ["cow", "horse", "cat", "dog"];
 
 type QuickToFn = (value: number) => void;
 
@@ -68,7 +72,27 @@ export default function AnimatedCharacters({
   isTyping = false,
   showPassword = false,
   passwordLength = 0,
+  entrance = false,
+  mirrored = false,
+  characters = ALL_CHARACTERS,
 }: AnimatedCharactersProps) {
+  const mirror = mirrored ? -1 : 1;
+
+  const included = ALL_CHARACTERS.filter((who) => characters.includes(who));
+  const shown = {
+    horse: included.includes("horse"),
+    cat: included.includes("cat"),
+    cow: included.includes("cow"),
+    dog: included.includes("dog"),
+  };
+
+  const groupLeft = included.length ? Math.min(...included.map((who) => LAYOUT[who].left)) : 0;
+  const groupRight = included.length
+    ? Math.max(...included.map((who) => LAYOUT[who].left + LAYOUT[who].width))
+    : 0;
+  const groupWidth = groupRight - groupLeft;
+  const packedLeft = (who: Who) => LAYOUT[who].left - groupLeft;
+
   const containerRef = useRef<HTMLDivElement>(null);
   const horseRef = useRef<HTMLDivElement>(null);
   const catRef = useRef<HTMLDivElement>(null);
@@ -81,7 +105,7 @@ export default function AnimatedCharacters({
   const dogFaceRef = useRef<HTMLDivElement>(null);
 
   const mouseRef = useRef({ x: 0, y: 0 });
-  const quickToRef = useRef<Record<string, QuickToFn> | null>(null);
+  const quickToRef = useRef<Partial<Record<string, QuickToFn>> | null>(null);
 
   const lookingTimerRef = useRef<ReturnType<typeof setTimeout>>(undefined);
   const horsePeekTimerRef = useRef<ReturnType<typeof setTimeout>>(undefined);
@@ -102,17 +126,22 @@ export default function AnimatedCharacters({
     stateRef.current.isShowingPassword = isShowingPassword;
   }, [isTyping, isHidingPassword, isShowingPassword]);
 
+  const mirrorRef = useRef(mirror);
+  useEffect(() => {
+    mirrorRef.current = mirror;
+  }, [mirror]);
+
   const setFace = (who: Who, [dx, dy]: readonly [number, number]) => {
     const qt = quickToRef.current;
     if (!qt) return;
     const base = FACE[who];
-    qt[`${who}FaceLeft`](base.left + dx);
-    qt[`${who}FaceTop`](base.top + dy);
+    qt[`${who}FaceLeft`]?.(base.left + dx * mirror);
+    qt[`${who}FaceTop`]?.(base.top + dy);
   };
 
   const movePupils = (host: HTMLElement | null, x: number, y: number) => {
     host?.querySelectorAll<HTMLElement>(".pupil").forEach((p) => {
-      gsap.to(p, { x, y, duration: 0.3, ease: "power2.out", overwrite: "auto" });
+      gsap.to(p, { x: x * mirror, y, duration: 0.3, ease: "power2.out", overwrite: "auto" });
     });
   };
 
@@ -130,15 +159,15 @@ export default function AnimatedCharacters({
   const applyShowPassword = () => {
     const qt = quickToRef.current;
     if (qt) {
-      qt.horseSkew(0);
-      qt.catSkew(0);
-      qt.cowSkew(0);
-      qt.dogSkew(0);
-      qt.horseX(0);
-      qt.catX(0);
-      qt.horseHeight(HORSE_HEIGHT);
-      qt.horseEyeGap(HORSE_EYE_GAP_SHOW);
-      qt.dogEyeGap(DOG_EYE_GAP_SHOW);
+      qt.horseSkew?.(0);
+      qt.catSkew?.(0);
+      qt.cowSkew?.(0);
+      qt.dogSkew?.(0);
+      qt.horseX?.(0);
+      qt.catX?.(0);
+      qt.horseHeight?.(HORSE_HEIGHT);
+      qt.horseEyeGap?.(HORSE_EYE_GAP_SHOW);
+      qt.dogEyeGap?.(DOG_EYE_GAP_SHOW);
     }
 
     setFace("horse", POSE.show.horse);
@@ -155,48 +184,65 @@ export default function AnimatedCharacters({
   const resetEyeGap = () => {
     const qt = quickToRef.current;
     if (!qt) return;
-    qt.horseEyeGap(HORSE_EYE_GAP);
-    qt.dogEyeGap(DOG_EYE_GAP);
+    qt.horseEyeGap?.(HORSE_EYE_GAP);
+    qt.dogEyeGap?.(DOG_EYE_GAP);
   };
 
-  // Set up quickTo instances, the cursor-tracking rAF loop, and the mousemove listener.
   useEffect(() => {
-    if (
-      !horseRef.current ||
-      !catRef.current ||
-      !cowRef.current ||
-      !dogRef.current ||
-      !horseFaceRef.current ||
-      !catFaceRef.current ||
-      !cowFaceRef.current ||
-      !dogFaceRef.current
-    )
-      return;
+    const REF: Record<Who, HTMLDivElement | null> = {
+      horse: horseRef.current,
+      cat: catRef.current,
+      cow: cowRef.current,
+      dog: dogRef.current,
+    };
+    const FACE_REF: Record<Who, HTMLDivElement | null> = {
+      horse: horseFaceRef.current,
+      cat: catFaceRef.current,
+      cow: cowFaceRef.current,
+      dog: dogFaceRef.current,
+    };
+
+    if (included.some((who) => !REF[who] || !FACE_REF[who])) return;
 
     gsap.set(".pupil", { x: 0, y: 0 });
 
     const smooth = (target: HTMLElement, prop: string, duration = 0.3) =>
       gsap.quickTo(target, prop, { duration, ease: "power2.out" }) as unknown as QuickToFn;
 
-    const qt: Record<string, QuickToFn> = {
-      horseSkew: smooth(horseRef.current, "skewX"),
-      catSkew: smooth(catRef.current, "skewX"),
-      cowSkew: smooth(cowRef.current, "skewX"),
-      dogSkew: smooth(dogRef.current, "skewX"),
-      horseX: smooth(horseRef.current, "x"),
-      catX: smooth(catRef.current, "x"),
-      horseHeight: smooth(horseRef.current, "height"),
-      horseFaceLeft: smooth(horseFaceRef.current, "left"),
-      horseFaceTop: smooth(horseFaceRef.current, "top"),
-      catFaceLeft: smooth(catFaceRef.current, "left"),
-      catFaceTop: smooth(catFaceRef.current, "top"),
-      cowFaceLeft: smooth(cowFaceRef.current, "left", 0.2),
-      cowFaceTop: smooth(cowFaceRef.current, "top", 0.2),
-      dogFaceLeft: smooth(dogFaceRef.current, "left", 0.2),
-      dogFaceTop: smooth(dogFaceRef.current, "top", 0.2),
-      horseEyeGap: smooth(horseFaceRef.current, "gap"),
-      dogEyeGap: smooth(dogFaceRef.current, "gap"),
-    };
+    const qt: Partial<Record<string, QuickToFn>> = {};
+    if (REF.horse) {
+      qt.horseSkew = smooth(REF.horse, "skewX");
+      qt.horseX = smooth(REF.horse, "x");
+      qt.horseHeight = smooth(REF.horse, "height");
+    }
+    if (REF.cat) {
+      qt.catSkew = smooth(REF.cat, "skewX");
+      qt.catX = smooth(REF.cat, "x");
+    }
+    if (REF.cow) {
+      qt.cowSkew = smooth(REF.cow, "skewX");
+    }
+    if (REF.dog) {
+      qt.dogSkew = smooth(REF.dog, "skewX");
+    }
+    if (FACE_REF.horse) {
+      qt.horseFaceLeft = smooth(FACE_REF.horse, "left");
+      qt.horseFaceTop = smooth(FACE_REF.horse, "top");
+      qt.horseEyeGap = smooth(FACE_REF.horse, "gap");
+    }
+    if (FACE_REF.cat) {
+      qt.catFaceLeft = smooth(FACE_REF.cat, "left");
+      qt.catFaceTop = smooth(FACE_REF.cat, "top");
+    }
+    if (FACE_REF.cow) {
+      qt.cowFaceLeft = smooth(FACE_REF.cow, "left", 0.2);
+      qt.cowFaceTop = smooth(FACE_REF.cow, "top", 0.2);
+    }
+    if (FACE_REF.dog) {
+      qt.dogFaceLeft = smooth(FACE_REF.dog, "left", 0.2);
+      qt.dogFaceTop = smooth(FACE_REF.dog, "top", 0.2);
+      qt.dogEyeGap = smooth(FACE_REF.dog, "gap");
+    }
     quickToRef.current = qt;
 
     const calcPos = (el: HTMLElement) => {
@@ -236,72 +282,73 @@ export default function AnimatedCharacters({
         isLooking: looking,
       } = stateRef.current;
 
+      const m = mirrorRef.current;
+
       if (horseRef.current && !showing) {
         const hp = calcPos(horseRef.current);
         if (typing || hiding) {
-          qt.horseSkew(hp.bodySkew - 12);
-          qt.horseX(40);
-          qt.horseHeight(HORSE_HEIGHT_STRETCHED);
+          qt.horseSkew?.((hp.bodySkew - 12) * m);
+          qt.horseX?.(40 * m);
+          qt.horseHeight?.(HORSE_HEIGHT_STRETCHED);
         } else {
-          qt.horseSkew(hp.bodySkew);
-          qt.horseX(0);
-          qt.horseHeight(HORSE_HEIGHT);
+          qt.horseSkew?.(hp.bodySkew * m);
+          qt.horseX?.(0);
+          qt.horseHeight?.(HORSE_HEIGHT);
         }
       }
 
       if (catRef.current && !showing) {
         const cp = calcPos(catRef.current);
         if (looking) {
-          qt.catSkew(cp.bodySkew * 1.5 + 10);
-          qt.catX(20);
+          qt.catSkew?.((cp.bodySkew * 1.5 + 10) * m);
+          qt.catX?.(20 * m);
         } else if (typing || hiding) {
-          qt.catSkew(cp.bodySkew * 1.5);
-          qt.catX(0);
+          qt.catSkew?.(cp.bodySkew * 1.5 * m);
+          qt.catX?.(0);
         } else {
-          qt.catSkew(cp.bodySkew);
-          qt.catX(0);
+          qt.catSkew?.(cp.bodySkew * m);
+          qt.catX?.(0);
         }
       }
 
       if (cowRef.current && !showing) {
-        qt.cowSkew(calcPos(cowRef.current).bodySkew);
+        qt.cowSkew?.(calcPos(cowRef.current).bodySkew * m);
       }
 
       if (dogRef.current && !showing) {
-        qt.dogSkew(calcPos(dogRef.current).bodySkew);
+        qt.dogSkew?.(calcPos(dogRef.current).bodySkew * m);
       }
 
       if (horseRef.current && !showing && !looking) {
         const hp = calcPos(horseRef.current);
-        qt.horseFaceLeft(FACE.horse.left + hp.faceX * FACE_TRAVEL.horse);
-        qt.horseFaceTop(FACE.horse.top + hp.faceY * FACE_TRAVEL.horse);
+        qt.horseFaceLeft?.(FACE.horse.left + hp.faceX * FACE_TRAVEL.horse * m);
+        qt.horseFaceTop?.(FACE.horse.top + hp.faceY * FACE_TRAVEL.horse);
       }
 
       if (catRef.current && !showing && !looking) {
         const cp = calcPos(catRef.current);
-        qt.catFaceLeft(FACE.cat.left + cp.faceX * FACE_TRAVEL.cat);
-        qt.catFaceTop(FACE.cat.top + cp.faceY * FACE_TRAVEL.cat);
+        qt.catFaceLeft?.(FACE.cat.left + cp.faceX * FACE_TRAVEL.cat * m);
+        qt.catFaceTop?.(FACE.cat.top + cp.faceY * FACE_TRAVEL.cat);
       }
 
       if (cowRef.current && !showing) {
         const cp = calcPos(cowRef.current);
-        qt.cowFaceLeft(FACE.cow.left + cp.faceX * FACE_TRAVEL.cow);
-        qt.cowFaceTop(FACE.cow.top + cp.faceY * FACE_TRAVEL.cow);
+        qt.cowFaceLeft?.(FACE.cow.left + cp.faceX * FACE_TRAVEL.cow * m);
+        qt.cowFaceTop?.(FACE.cow.top + cp.faceY * FACE_TRAVEL.cow);
       }
 
       if (dogRef.current && !showing) {
         const dp = calcPos(dogRef.current);
-        qt.dogFaceLeft(FACE.dog.left + dp.faceX * FACE_TRAVEL.dog);
-        qt.dogFaceTop(FACE.dog.top + dp.faceY * FACE_TRAVEL.dog);
+        qt.dogFaceLeft?.(FACE.dog.left + dp.faceX * FACE_TRAVEL.dog * m);
+        qt.dogFaceTop?.(FACE.dog.top + dp.faceY * FACE_TRAVEL.dog);
       }
 
       if (!showing) {
         container.querySelectorAll<HTMLElement>(".pupil").forEach((el) => {
-          // While looking at each other, the horse's and cat's eyes are driven by applyLookAtEachOther
           if (looking && (horseRef.current?.contains(el) || catRef.current?.contains(el))) return;
           const maxDist = Number(el.dataset.maxDistance) || 5;
           const ePos = calcEyePos(el, maxDist);
-          gsap.set(el, { x: ePos.x, y: ePos.y });
+          gsap.set(el, { x: ePos.x * m, y: ePos.y });
         });
       }
 
@@ -320,9 +367,30 @@ export default function AnimatedCharacters({
       window.removeEventListener("mousemove", onMove);
       cancelAnimationFrame(rafId);
     };
-  }, []);
+  }, [shown.horse, shown.cat, shown.cow, shown.dog]);
 
-  /** Blinking: dot-shaped eyes blink by squashing the vertical scale */
+  useEffect(() => {
+    if (!entrance) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+    const targets = [cowRef.current, horseRef.current, catRef.current, dogRef.current].filter(
+      (el): el is HTMLDivElement => el !== null
+    );
+    if (mirrored) targets.reverse();
+    if (!targets.length) return;
+
+    const tween = gsap.fromTo(
+      targets,
+      { yPercent: 125 },
+      { yPercent: 0, duration: 1, ease: "back.out(1.3)", stagger: 0.13, delay: 0.15 }
+    );
+
+    return () => {
+      tween.kill();
+      gsap.set(targets, { yPercent: 0 });
+    };
+  }, [entrance, mirrored, shown.horse, shown.cat, shown.cow, shown.dog]);
+
   useEffect(() => {
     const blinkHandles: { t?: ReturnType<typeof setTimeout> }[] = [];
 
@@ -353,9 +421,8 @@ export default function AnimatedCharacters({
     startBlinking(dogRef.current);
 
     return () => blinkHandles.forEach((h) => clearTimeout(h.t));
-  }, []);
+  }, [shown.horse, shown.cat, shown.cow, shown.dog]);
 
-  // Password peek effect: while the password is shown, the horse periodically peeks at it
   useEffect(() => {
     if (!isShowingPassword || passwordLength <= 0) {
       clearTimeout(horsePeekTimerRef.current);
@@ -385,7 +452,6 @@ export default function AnimatedCharacters({
     };
   }, [isShowingPassword, passwordLength]);
 
-  // Horse and cat look at each other while typing
   useEffect(() => {
     if (isTyping && !isShowingPassword) {
       stateRef.current.isLooking = true;
@@ -402,10 +468,8 @@ export default function AnimatedCharacters({
     }
 
     return () => clearTimeout(lookingTimerRef.current);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isTyping, isShowingPassword]);
 
-  // Password state effects
   useEffect(() => {
     if (isShowingPassword) {
       applyShowPassword();
@@ -415,94 +479,105 @@ export default function AnimatedCharacters({
         applyHidingPassword();
       }
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isShowingPassword, isHidingPassword]);
 
   return (
-    <div ref={containerRef} style={{ position: "relative", width: "555px", height: `${HORSE_HEIGHT}px` }}>
-      {/* Horse */}
-      <div
-        ref={horseRef}
-        style={{
-          position: "absolute",
-          bottom: 0,
-          left: "105px",
-          width: "233px",
-          height: `${HORSE_HEIGHT}px`,
-          zIndex: 1,
-          transformOrigin: "bottom center",
-          willChange: "transform",
-        }}
-      >
-        <HorseBody />
-        <div ref={horseFaceRef} style={faceStyle(FACE.horse, HORSE_EYE_GAP)}>
-          <Pupil size="18px" maxDistance={6} pupilColor={EYE} />
-          <Pupil size="18px" maxDistance={6} pupilColor={EYE} />
+    <div
+      ref={containerRef}
+      style={{
+        position: "relative",
+        width: `${groupWidth}px`,
+        height: `${HORSE_HEIGHT}px`,
+        transform: mirrored ? "scaleX(-1)" : undefined,
+      }}
+    >
+      {shown.horse && (
+        <div
+          ref={horseRef}
+          style={{
+            position: "absolute",
+            bottom: 0,
+            left: `${packedLeft("horse")}px`,
+            width: `${LAYOUT.horse.width}px`,
+            height: `${HORSE_HEIGHT}px`,
+            zIndex: LAYOUT.horse.zIndex,
+            transformOrigin: "bottom center",
+            willChange: "transform",
+          }}
+        >
+          <HorseBody />
+          <div ref={horseFaceRef} style={faceStyle(FACE.horse, HORSE_EYE_GAP)}>
+            <Pupil size="18px" maxDistance={6} pupilColor={EYE} />
+            <Pupil size="18px" maxDistance={6} pupilColor={EYE} />
+          </div>
         </div>
-      </div>
+      )}
 
-      {/* Cat */}
-      <div
-        ref={catRef}
-        style={{
-          position: "absolute",
-          bottom: 0,
-          left: "235px",
-          width: "207px",
-          height: "250px",
-          zIndex: 2,
-          transformOrigin: "bottom center",
-          willChange: "transform",
-        }}
-      >
-        <CatBody />
-        <div ref={catFaceRef} style={faceStyle(FACE.cat, 34)}>
-          <Pupil size="18px" maxDistance={6} pupilColor={EYE} />
-          <Pupil size="18px" maxDistance={6} pupilColor={EYE} />
+      {shown.cat && (
+        <div
+          ref={catRef}
+          style={{
+            position: "absolute",
+            bottom: 0,
+            left: `${packedLeft("cat")}px`,
+            width: `${LAYOUT.cat.width}px`,
+            height: `${LAYOUT.cat.height}px`,
+            zIndex: LAYOUT.cat.zIndex,
+            transformOrigin: "bottom center",
+            willChange: "transform",
+          }}
+        >
+          <CatBody />
+          <div ref={catFaceRef} style={faceStyle(FACE.cat, 34)}>
+            <Pupil size="18px" maxDistance={6} pupilColor={EYE} />
+            <Pupil size="18px" maxDistance={6} pupilColor={EYE} />
+          </div>
         </div>
-      </div>
+      )}
 
-      {/* Cow */}
-      <div
-        ref={cowRef}
-        style={{
-          position: "absolute",
-          bottom: 0,
-          left: 0,
-          width: "243px",
-          height: "235px",
-          zIndex: 3,
-          transformOrigin: "bottom center",
-          willChange: "transform",
-        }}
-      >
-        <CowBody />
-        <div ref={cowFaceRef} style={faceStyle(FACE.cow, 40)}>
-          <Pupil size="18px" maxDistance={6} pupilColor={EYE} />
-          <Pupil size="18px" maxDistance={6} pupilColor={EYE} />
+      {shown.cow && (
+        <div
+          ref={cowRef}
+          style={{
+            position: "absolute",
+            bottom: 0,
+            left: `${packedLeft("cow")}px`,
+            width: `${LAYOUT.cow.width}px`,
+            height: `${LAYOUT.cow.height}px`,
+            zIndex: LAYOUT.cow.zIndex,
+            transformOrigin: "bottom center",
+            willChange: "transform",
+          }}
+        >
+          <CowBody />
+          <div ref={cowFaceRef} style={faceStyle(FACE.cow, 40)}>
+            <Pupil size="18px" maxDistance={6} pupilColor={EYE} />
+            <Pupil size="18px" maxDistance={6} pupilColor={EYE} />
+          </div>
         </div>
-      </div>
+      )}
 
-      {/* Dog */}
-      <div
-        ref={dogRef}
-        style={{
-          position: "absolute",
-          bottom: 0,
-          left: "375px",
-          width: "180px",
-          height: "183px",
-          zIndex: 4,
-          transformOrigin: "bottom center",
-          willChange: "transform",
-        }}
-      >
-        <DogBody />
-        <div ref={dogFaceRef} style={faceStyle(FACE.dog, DOG_EYE_GAP)}>
-          <Pupil size="18px" maxDistance={6} pupilColor={EYE} />
-          <Pupil size="18px" maxDistance={6} pupilColor={EYE} />
+      {shown.dog && (
+        <div
+          ref={dogRef}
+          style={{
+            position: "absolute",
+            bottom: 0,
+            left: `${packedLeft("dog")}px`,
+            width: `${LAYOUT.dog.width}px`,
+            height: `${LAYOUT.dog.height}px`,
+            zIndex: LAYOUT.dog.zIndex,
+            transformOrigin: "bottom center",
+            willChange: "transform",
+          }}
+        >
+          <DogBody />
+          <div ref={dogFaceRef} style={faceStyle(FACE.dog, DOG_EYE_GAP)}>
+            <Pupil size="18px" maxDistance={6} pupilColor={EYE} />
+            <Pupil size="18px" maxDistance={6} pupilColor={EYE} />
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }

@@ -1,10 +1,20 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
-import Image from "next/image";
-import { HugeiconsIcon } from "@hugeicons/react";
-import { Bone02Icon, LockIcon, UserIcon, ViewIcon, ViewOffIcon } from "@hugeicons/core-free-icons";
 import AnimatedCharacters from "@/components/animated-characters/AnimatedCharacters";
+import { PawIcon } from "@/components/layout/icons";
+import { LockIcon, UserIcon, ViewIcon, ViewOffIcon } from "@hugeicons/core-free-icons";
+import { HugeiconsIcon } from "@hugeicons/react";
+import Image from "next/image";
+import { useState, type FormEvent } from "react";
+import {
+  BoneDoodle,
+  GroundBack,
+  GroundFront,
+  HeartIcon,
+  PawMark,
+  PawPattern,
+  PawTrail,
+} from "./_components/decorations";
 
 async function mockLogin(_values: { username: string; password: string }) {
   await new Promise((resolve) => setTimeout(resolve, 800));
@@ -24,10 +34,10 @@ export default function LoginPage() {
     e.preventDefault();
 
     const nextFieldError: { username?: string; password?: string } = {};
-    if (!username) nextFieldError.username = "Please enter your username";
-    else if (username.length < 3) nextFieldError.username = "Username must be at least 3 characters";
-    if (!password) nextFieldError.password = "Please enter your password";
-    else if (password.length < 6) nextFieldError.password = "Password must be at least 6 characters";
+    if (!username) nextFieldError.username = "Entrez votre nom d'utilisateur";
+    else if (username.length < 3) nextFieldError.username = "3 caractères minimum";
+    if (!password) nextFieldError.password = "Entrez votre mot de passe";
+    else if (password.length < 6) nextFieldError.password = "6 caractères minimum";
     setFieldError(nextFieldError);
     if (nextFieldError.username || nextFieldError.password) return;
 
@@ -40,107 +50,73 @@ export default function LoginPage() {
         window.location.href = "/";
       }, 500);
     } catch {
-      setError("Incorrect username or password, please try again");
+      setError("Identifiants incorrects, veuillez réessayer.");
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="fixed inset-0 overflow-hidden">
-      {/* Background felt texture */}
-      <Image src="/assets/whoold_background.png" alt="" fill priority className="object-cover" />
+    <div className="fixed inset-0 overflow-hidden bg-[linear-gradient(180deg,#e8f1ff_0%,#f5f8fd_48%,#fbfcfe_100%)]">
+      <PawPattern className="pointer-events-none absolute inset-0 z-0 h-full w-full text-primary/[0.045]" />
 
-      {/* Top-left corner cloud */}
-      <img
-        src="/assets/tl_whool_cloud.png"
-        alt=""
-        className="pointer-events-none absolute top-0 left-0 z-10 w-[340px] opacity-95"
-      />
+      <div className="pointer-events-none absolute -top-40 -left-32 z-0 h-[520px] w-[520px] rounded-full bg-white/70 blur-3xl" />
 
-      {/* Bottom cloud band (ground) */}
-      <img
-        src="/assets/whool_cloud.png"
-        alt=""
-        className="pointer-events-none absolute inset-x-0 bottom-[-100px] z-[15] w-full select-none"
-      />
+      <PawTrail className="float-soft-slow pointer-events-none absolute top-[10%] left-1/2 z-[5] w-190 -translate-x-1/2 text-primary" />
 
-      {/* Content */}
-      <div className="relative z-20 flex h-full w-full flex-col px-14 py-8">
-        {/* Brand mark */}
-        <div className="flex shrink-0 items-center gap-3">
-          <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-accent shadow-sm">
-            <Image src="/logos/logo_color.png" alt="Veternity" width={34} height={34} className="rounded-md" />
+      <PawMark className="float-soft pointer-events-none absolute top-[30%] left-[7%] z-[5] h-7 w-7 -rotate-12 text-primary/15" />
+      <PawMark className="float-soft-slow pointer-events-none absolute top-[22%] right-[9%] z-[5] h-9 w-9 rotate-12 text-primary/12" />
+      <BoneDoodle className="float-soft-slow pointer-events-none absolute top-[44%] left-[4%] z-[5] w-14 -rotate-12 text-primary/12" />
+      <HeartIcon className="float-soft pointer-events-none absolute top-[38%] right-[5%] z-[5] h-6 w-6 text-status-pink/25" />
+
+      <GroundBack className="pointer-events-none absolute inset-x-0 bottom-0 z-[8] h-125 w-full" />
+
+      <div className="relative flex h-full w-full flex-col px-8 pt-8 pb-6 xl:px-14">
+        <div className="relative z-30 flex shrink-0 items-center gap-3">
+          <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-card shadow-md ring-1 ring-black/5">
+            <Image src="/logos/logo_color.png" alt="Veternity" width={36} height={36} className="rounded-md" />
           </div>
           <div>
             <div className="text-2xl font-extrabold tracking-tight text-foreground">Veternity</div>
-            <div className="text-sm font-medium text-muted-foreground">Care. Connect. Make a Difference.</div>
+            <div className="text-sm font-medium text-muted-foreground">Soignez. Connectez. Faites la différence.</div>
           </div>
         </div>
 
-        {/* Main area: characters left, form right */}
-        <div className="flex min-h-0 flex-1 flex-row items-center justify-center gap-10">
-          {/* Characters stage: a soft circular backdrop behind the animals
-              (not clipped, so nothing of them is ever cut off). */}
-          <div className="relative flex shrink-0 -translate-x-14 items-end justify-center">
-            <div
-              className="absolute rounded-full bg-primary/10"
-              style={{ width: "600px", height: "600px", bottom: "0px" }}
-            />
-            <div className="relative z-20">
-              <AnimatedCharacters
-                isTyping={isTyping}
-                showPassword={showPassword}
-                passwordLength={password.length}
-              />
+        <div className="flex min-h-0 flex-1 items-center justify-center gap-10 xl:gap-24">
+          <div className="relative z-20 hidden shrink-0 items-end justify-center lg:flex">
+            <div className="pointer-events-none absolute bottom-10 h-[620px] w-[620px] rounded-full bg-white/45 blur-3xl" />
+            <div className="relative origin-bottom scale-110 2xl:scale-125">
+              <AnimatedCharacters isTyping={isTyping} showPassword={showPassword} passwordLength={password.length} />
             </div>
           </div>
 
-          {/* Login card */}
-          <div className="relative w-[420px] rounded-[28px] border border-border bg-card p-10 shadow-xl">
-            {/* Overlapping badge */}
-            <div className="absolute -top-11 left-1/2 -translate-x-1/2">
-              <Image
-                src="/assets/whool_logo.png"
-                alt=""
-                width={88}
-                height={88}
-                className="rounded-full shadow-md"
-              />
+          <div className="relative z-30 w-[500px] shrink-0 rounded-[32px] border border-border bg-card px-11 pt-16 pb-10 shadow-2xl lg:translate-x-10">
+            <div className="pointer-events-none absolute inset-2.5 rounded-[24px] border-2 border-dashed border-primary/15" />
+
+            <div className="absolute -top-11 left-1/2 flex h-22 w-22 -translate-x-1/2 items-center justify-center rounded-full bg-card shadow-lg ring-1 ring-black/5">
+              <span className="flex h-17 w-17 items-center justify-center rounded-full bg-[#299CF1]">
+                <PawIcon className="h-9 w-9 text-primary-foreground" />
+              </span>
             </div>
 
-            {/* Corner ribbon */}
-            <div
-              className="absolute top-0 right-6 flex h-14 w-11 items-start justify-center rounded-b-md bg-status-pink pt-2 shadow-sm"
-              style={{ clipPath: "polygon(0 0, 100% 0, 100% 100%, 50% 75%, 0 100%)" }}
-            >
-              <HugeiconsIcon icon={Bone02Icon} className="h-4 w-4 text-white" strokeWidth={2.4} />
-            </div>
+            <h1 className="relative text-center text-[30px] leading-tight font-extrabold tracking-tight text-foreground">
+              Content de vous revoir&nbsp;!
+            </h1>
 
-            <div className="mt-8 text-center">
-              <h1 className="text-[26px] leading-tight font-extrabold tracking-tight text-foreground">
-                Sign in to your workspace
-              </h1>
-              <p className="mt-2 flex items-center justify-center gap-1.5 text-sm text-muted-foreground">
-                Your veterinary dashboard, simplified.
-                <HeartIcon className="h-3.5 w-3.5 text-status-pink" />
-              </p>
-            </div>
-
-            <form onSubmit={handleLogin} autoComplete="off" className="mt-8 flex flex-col">
+            <form onSubmit={handleLogin} autoComplete="off" className="relative mt-7 flex flex-col">
               <label className="mb-1.5 flex items-center gap-1 text-[13px] font-semibold text-foreground">
-                Username
-                <HugeiconsIcon icon={Bone02Icon} className="h-3 w-3 text-status-pink" strokeWidth={2.4} />
+                Nom d&apos;utilisateur
+                <PawIcon className="h-3 w-3 text-status-pink" />
               </label>
-              <div className="mb-1">
-                <div className="flex h-12 items-center gap-2 rounded-full border border-border bg-muted px-4 transition-colors focus-within:border-primary focus-within:bg-card focus-within:shadow-[0_0_0_3px_rgba(0,153,142,0.15)]">
+              <div>
+                <div className="flex h-12 items-center gap-2 rounded-full border border-border bg-muted px-4 transition-colors focus-within:border-primary focus-within:bg-card focus-within:shadow-[0_0_0_3px_color-mix(in_srgb,var(--primary)_15%,transparent)]">
                   <HugeiconsIcon icon={UserIcon} className="h-4 w-4 shrink-0 text-muted-foreground" strokeWidth={1.8} />
                   <input
                     value={username}
                     onChange={(e) => setUsername(e.target.value)}
                     onFocus={() => setIsTyping(true)}
                     onBlur={() => setIsTyping(false)}
-                    placeholder="Enter your username"
+                    placeholder="Ex : dr.kadiri"
                     className="w-full bg-transparent text-sm text-foreground placeholder:text-muted-foreground focus:outline-none"
                   />
                 </div>
@@ -149,12 +125,12 @@ export default function LoginPage() {
                 )}
               </div>
 
-              <label className="mt-5 mb-1.5 flex items-center gap-1 text-[13px] font-semibold text-foreground">
-                Password
-                <HugeiconsIcon icon={Bone02Icon} className="h-3 w-3 text-status-pink" strokeWidth={2.4} />
+              <label className="mt-4 mb-1.5 flex items-center gap-1 text-[13px] font-semibold text-foreground">
+                Mot de passe
+                <PawIcon className="h-3 w-3 text-status-pink" />
               </label>
-              <div className="mb-1">
-                <div className="flex h-12 items-center gap-2 rounded-full border border-border bg-muted px-4 transition-colors focus-within:border-primary focus-within:bg-card focus-within:shadow-[0_0_0_3px_rgba(0,153,142,0.15)]">
+              <div>
+                <div className="flex h-12 items-center gap-2 rounded-full border border-border bg-muted px-4 transition-colors focus-within:border-primary focus-within:bg-card focus-within:shadow-[0_0_0_3px_color-mix(in_srgb,var(--primary)_15%,transparent)]">
                   <HugeiconsIcon icon={LockIcon} className="h-4 w-4 shrink-0 text-muted-foreground" strokeWidth={1.8} />
                   <input
                     type={showPassword ? "text" : "password"}
@@ -162,14 +138,14 @@ export default function LoginPage() {
                     onChange={(e) => setPassword(e.target.value)}
                     onFocus={() => setIsTyping(true)}
                     onBlur={() => setIsTyping(false)}
-                    placeholder="Enter your password"
+                    placeholder="Entrez votre mot de passe"
                     className="w-full bg-transparent text-sm text-foreground placeholder:text-muted-foreground focus:outline-none"
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword((v) => !v)}
                     className="flex shrink-0 items-center text-muted-foreground transition-colors hover:text-primary"
-                    aria-label={showPassword ? "Hide password" : "Show password"}
+                    aria-label={showPassword ? "Masquer le mot de passe" : "Afficher le mot de passe"}
                   >
                     <HugeiconsIcon icon={showPassword ? ViewIcon : ViewOffIcon} className="h-4 w-4" strokeWidth={1.8} />
                   </button>
@@ -188,101 +164,37 @@ export default function LoginPage() {
               <button
                 type="submit"
                 disabled={loading}
-                className="mt-6 flex h-12 items-center justify-center gap-2 rounded-full bg-gradient-to-b from-[#00b3a4] to-primary text-[15px] font-bold tracking-wide text-primary-foreground shadow-md transition-opacity hover:opacity-95 active:opacity-85 disabled:cursor-not-allowed disabled:opacity-70"
+                className="mt-6 flex h-12 items-center justify-center gap-2 rounded-full bg-[#299CF1] text-[15px] font-bold tracking-wide text-primary-foreground shadow-lg transition-transform hover:-translate-y-px active:translate-y-0 disabled:cursor-not-allowed disabled:opacity-70"
               >
-                <HugeiconsIcon icon={Bone02Icon} className="h-4 w-4 text-primary-foreground" strokeWidth={2.4} />
-                {loading ? "Signing in..." : "Sign in"}
+                <PawIcon className="h-4 w-4 text-primary-foreground" />
+                {loading ? "Connexion..." : "Se connecter"}
               </button>
             </form>
 
-            <div className="mt-5 flex items-center gap-3 text-[13px]">
-              <div className="h-px flex-1 bg-border" />
-              <span className="text-muted-foreground">or</span>
-              <div className="h-px flex-1 bg-border" />
-            </div>
-
-            <button
-              type="button"
-              className="mt-3 flex h-12 w-full items-center justify-center gap-2 rounded-full border border-border bg-card text-sm font-medium text-foreground transition-colors hover:border-primary/30 hover:bg-muted"
-            >
-              <FeishuIcon />
-              Sign in with Feishu
-            </button>
-
-            <div className="mt-6 text-center text-[13px] text-muted-foreground">
-              Don&apos;t have an account?{" "}
+            <div className="relative mt-5 text-center text-[13px] text-muted-foreground">
+              Besoin d&apos;aide ?{" "}
               <a href="#" className="font-semibold text-primary hover:text-primary/80 hover:underline">
-                Contact your admin for access
+                Contactez votre administrateur
               </a>
             </div>
           </div>
         </div>
 
-        {/* Footer */}
-        <div className="relative z-30 flex shrink-0 items-center justify-between pt-4 pb-2 text-[13px] font-medium text-foreground">
+        <div className="relative z-30 flex shrink-0 items-center justify-between text-[13px] font-medium text-foreground">
           <div className="flex items-center gap-3">
             <a href="#" className="transition-colors hover:text-primary">
-              Help Center
+              Centre d&apos;aide
             </a>
             <span className="text-border">|</span>
             <a href="#" className="transition-colors hover:text-primary">
-              Privacy Policy
+              Confidentialité
             </a>
-            <HugeiconsIcon icon={Bone02Icon} className="h-3.5 w-3.5 text-muted-foreground" strokeWidth={2.4} />
           </div>
-
-          <div className="flex items-center gap-2 rounded-full border border-border bg-card/80 px-5 py-2 shadow-sm">
-            <HeartIcon className="h-3.5 w-3.5 text-status-pink" />
-            <span>Built for Vets. Designed for Care.</span>
-            <HugeiconsIcon icon={Bone02Icon} className="h-3.5 w-3.5 text-muted-foreground" strokeWidth={2.4} />
-          </div>
-
-          <YarnBall className="h-16 w-16" />
+          <span className="text-muted-foreground">© {new Date().getFullYear()} Veternity</span>
         </div>
       </div>
+
+      <GroundFront className="pointer-events-none absolute inset-x-0 bottom-0 z-[25] h-78.5 w-full" />
     </div>
-  );
-}
-
-function HeartIcon({ className }: { className?: string }) {
-  return (
-    <svg viewBox="0 0 24 24" fill="currentColor" className={className}>
-      <path d="M12 21s-7.5-4.6-10-9.1C.5 8.6 2.2 5 5.7 5c2 0 3.4 1 4.3 2.3C11 5.9 12.4 5 14.3 5c3.5 0 5.2 3.6 3.7 6.9C19.5 16.4 12 21 12 21Z" />
-    </svg>
-  );
-}
-
-function YarnBall({ className }: { className?: string }) {
-  return (
-    <svg viewBox="0 0 100 100" className={className}>
-      <path
-        d="M8 70c15-25 40-8 45-30"
-        fill="none"
-        stroke="#e5799f"
-        strokeWidth="2"
-        strokeLinecap="round"
-      />
-      <circle cx="62" cy="62" r="26" fill="#f5a8c4" />
-      <circle cx="62" cy="62" r="26" fill="url(#yarnShine)" />
-      <path d="M40 52c8 10 8 22 0 32M50 40c14 8 20 22 12 36M56 74c10-2 18-10 20-20" fill="none" stroke="#e5799f" strokeWidth="1.5" opacity="0.6" />
-      <defs>
-        <radialGradient id="yarnShine" cx="35%" cy="30%" r="70%">
-          <stop offset="0%" stopColor="#ffffff" stopOpacity="0.5" />
-          <stop offset="100%" stopColor="#ffffff" stopOpacity="0" />
-        </radialGradient>
-      </defs>
-    </svg>
-  );
-}
-
-function FeishuIcon() {
-  return (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-      <rect width="24" height="24" rx="6" fill="#00D6B9" />
-      <path
-        d="M6 15.5c2-1 3.5-3 4-6.5 1 3 3 5 6 5.5-1.5 1-3.5 3-4 6.5-1-3-3-5-6-5.5Z"
-        fill="white"
-      />
-    </svg>
   );
 }

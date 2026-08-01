@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { ClientsBanner } from "./_components/clients-banner";
 import { ClientsCard } from "./_components/clients-card";
 import { AddClientDialog } from "./_components/add-client-dialog";
 import { CLIENTS, type Client } from "./_components/data";
@@ -45,7 +46,8 @@ export default function ClientsPage() {
   const pageClients = filteredClients.slice(rangeStart - 1, rangeEnd);
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="overflow-hidden border border-border bg-card shadow-sm">
+      <ClientsBanner />
       <ClientsCard
         search={search}
         onSearchChange={handleSearchChange}

@@ -55,7 +55,7 @@ export default function AnimauxPage() {
   const pageAnimals = filteredAnimals.slice(rangeStart - 1, rangeEnd);
 
   return (
-    <div className="overflow-hidden rounded-xl border border-border bg-card shadow-sm">
+    <div className="overflow-hidden border border-border bg-card shadow-sm">
       <AnimauxBanner />
       <AnimauxCard
         search={search}

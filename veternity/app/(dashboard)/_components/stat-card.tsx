@@ -1,19 +1,20 @@
-import { HugeiconsIcon } from "@hugeicons/react";
-import type { IconSvgElement } from "@hugeicons/react";
+import type { IconComponent } from "@/components/layout/icons";
 
 interface StatCardProps {
   value: string | number;
   label: string;
-  icon: IconSvgElement;
-  iconBg: string;
-  iconColor: string;
+  icon: IconComponent;
+  accent: string;
 }
 
-export function StatCard({ value, label, icon, iconBg, iconColor }: StatCardProps) {
+export function StatCard({ value, label, icon: Icon, accent }: StatCardProps) {
   return (
     <div className="flex flex-col gap-3 p-5">
-      <div className={`flex h-10 w-10 items-center justify-center rounded-md ${iconBg}`}>
-        <HugeiconsIcon icon={icon} className={`h-5 w-5 ${iconColor}`} strokeWidth={2.2} />
+      <div
+        className="flex h-10 w-10 items-center justify-center rounded-md"
+        style={{ backgroundColor: `color-mix(in srgb, ${accent} 16%, white)` }}
+      >
+        <Icon className="h-5 w-5" style={{ color: accent }} strokeWidth={2.2} />
       </div>
       <div>
         <div className="text-2xl font-extrabold text-foreground">{value}</div>

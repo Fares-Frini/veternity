@@ -32,12 +32,9 @@ function SectionLabel({ icon, title, hint }: { icon: IconSvgElement; title: stri
 
 interface AddClientDialogProps {
   onAdd: (client: Client) => void;
-  /** Controlled open state — when omitted, the dialog manages its own trigger + open state. */
   open?: boolean;
   onOpenChange?: (open: boolean) => void;
-  /** Hides the built-in "Ajouter" trigger button, for when the dialog is opened programmatically. */
   hideTrigger?: boolean;
-  /** Pre-fills the "Nom" field, e.g. when opened from a search query that had no match. */
   initialName?: string;
   trigger?: ReactNode;
 }
@@ -87,7 +84,6 @@ export function AddClientDialog({ onAdd, open, onOpenChange, hideTrigger, initia
       )}
 
       <DialogContent className="max-h-[92vh] w-full max-w-lg gap-0 overflow-y-auto rounded-lg p-0 sm:max-w-lg" showCloseButton={false}>
-        {/* Header fin */}
         <div className="relative flex items-center justify-between bg-primary px-6 py-1.5 text-primary-foreground">
           <DialogHeader className="gap-0">
             <DialogTitle className="text-sm font-bold text-primary-foreground">Ajouter un client</DialogTitle>

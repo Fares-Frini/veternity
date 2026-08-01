@@ -59,7 +59,6 @@ export function AnimauxCard({
 }: AnimauxCardProps) {
   return (
     <div>
-      {/* Toolbar */}
       <div className="flex flex-wrap items-center justify-between gap-4 border-b border-border p-4">
         <div className="relative w-full max-w-sm">
           <HugeiconsIcon
@@ -110,10 +109,8 @@ export function AnimauxCard({
         </div>
       </div>
 
-      {/* Content */}
       {view === "list" ? <AnimauxTable animals={pageAnimals} /> : <div className="p-4"><AnimauxGrid animals={pageAnimals} /></div>}
 
-      {/* Footer: page size + pagination */}
       <div className="flex flex-wrap items-center justify-between gap-4 border-t border-border px-4 py-3">
         <div className="flex items-center gap-2 text-sm text-muted-foreground">
           <span>Lignes par page</span>

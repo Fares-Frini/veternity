@@ -13,7 +13,7 @@ const MAX_VISIBLE_PER_DAY = 3;
 function buildMonthCells(year: number, month: number) {
   const firstOfMonth = new Date(year, month, 1);
   const daysInMonth = new Date(year, month + 1, 0).getDate();
-  const leadingBlanks = (firstOfMonth.getDay() + 6) % 7; // Monday-start offset
+  const leadingBlanks = (firstOfMonth.getDay() + 6) % 7;
 
   const cells: { date: Date; inMonth: boolean }[] = [];
   for (let i = leadingBlanks; i > 0; i--) {
@@ -56,7 +56,6 @@ export function AppointmentsCalendar({ appointments }: { appointments: Appointme
 
   return (
     <div className="p-4">
-      {/* Month nav */}
       <div className="mb-3 flex items-center justify-between">
         <span className="text-sm font-bold text-foreground capitalize">{monthLabel}</span>
         <div className="flex items-center gap-2">
@@ -89,7 +88,6 @@ export function AppointmentsCalendar({ appointments }: { appointments: Appointme
         </div>
       </div>
 
-      {/* Weekday header */}
       <div className="grid grid-cols-7 overflow-hidden rounded-t-md border border-b-0 border-border">
         {WEEKDAY_LABELS.map((label) => (
           <div
@@ -101,7 +99,6 @@ export function AppointmentsCalendar({ appointments }: { appointments: Appointme
         ))}
       </div>
 
-      {/* Grid */}
       <div className="grid grid-cols-7 rounded-b-md border border-border">
         {cells.map(({ date, inMonth }, i) => {
           const key = toDateKey(date.getFullYear(), date.getMonth(), date.getDate());

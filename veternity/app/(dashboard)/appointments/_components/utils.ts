@@ -18,9 +18,8 @@ export function toDateKey(year: number, month: number, day: number) {
   return `${year}-${String(month + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
 }
 
-/** Monday-start week range (inclusive) containing `date`. */
 export function weekRange(date: Date) {
-  const day = (date.getDay() + 6) % 7; // 0 = Monday
+  const day = (date.getDay() + 6) % 7;
   const start = new Date(date.getFullYear(), date.getMonth(), date.getDate() - day);
   const end = new Date(start.getFullYear(), start.getMonth(), start.getDate() + 6);
   return { start, end };

@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { PlusSignIcon } from "@hugeicons/core-free-icons";
 import { Button } from "@/components/ui/button";
+import { AppointmentsBanner } from "./_components/appointments-banner";
 import { AppointmentsStats } from "./_components/appointments-stats";
 import { AppointmentsPanel, type AppointmentsView } from "./_components/appointments-panel";
 import { AddAppointmentDialog } from "./_components/add-appointment-dialog";
@@ -33,22 +34,8 @@ export default function AppointmentsPage() {
   };
 
   return (
-    <div className="flex flex-col gap-6">
-      <div className="flex flex-wrap items-center justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-extrabold text-foreground">Rendez-vous</h1>
-          <p className="text-sm text-muted-foreground">Planning et suivi des consultations de la clinique</p>
-        </div>
-        <AddAppointmentDialog
-          onAdd={handleAddAppointment}
-          trigger={
-            <Button size="lg" className="gap-1.5 bg-primary hover:bg-primary/90">
-              <HugeiconsIcon icon={PlusSignIcon} className="h-4 w-4" strokeWidth={2.4} />
-              Ajouter un rendez-vous
-            </Button>
-          }
-        />
-      </div>
+    <div className="overflow-hidden border border-border bg-card shadow-sm">
+      <AppointmentsBanner />
 
       <AppointmentsStats appointments={appointments} />
 
@@ -61,6 +48,17 @@ export default function AppointmentsPage() {
         onViewChange={setView}
         allAppointments={appointments}
         filteredAppointments={filteredAppointments}
+        headerAction={
+          <AddAppointmentDialog
+            onAdd={handleAddAppointment}
+            trigger={
+              <Button className="gap-1.5 bg-primary hover:bg-primary/90">
+                <HugeiconsIcon icon={PlusSignIcon} className="h-4 w-4" strokeWidth={2.4} />
+                Ajouter
+              </Button>
+            }
+          />
+        }
       />
     </div>
   );

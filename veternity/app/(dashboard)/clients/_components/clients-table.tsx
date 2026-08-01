@@ -1,7 +1,8 @@
 import { HugeiconsIcon } from "@hugeicons/react";
-import { Bone02Icon, Mail01Icon, MapPinIcon, SmartPhone01Icon } from "@hugeicons/core-free-icons";
+import { Mail01Icon, MapPinIcon, SmartPhone01Icon } from "@hugeicons/core-free-icons";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { PawIcon } from "@/components/layout/icons";
 import type { Client } from "./data";
 
 export function ClientsTable({ clients }: { clients: Client[] }) {
@@ -24,7 +25,7 @@ export function ClientsTable({ clients }: { clients: Client[] }) {
             <TableCell>
               <div className="flex items-center gap-2.5">
                 <Avatar className="h-8 w-8">
-                  <AvatarFallback className="bg-secondary text-xs font-bold text-secondary-foreground">
+                  <AvatarFallback className="bg-primary/12 text-xs font-bold text-primary">
                     {client.name.slice(0, 2).toUpperCase()}
                   </AvatarFallback>
                 </Avatar>
@@ -50,8 +51,8 @@ export function ClientsTable({ clients }: { clients: Client[] }) {
               </div>
             </TableCell>
             <TableCell className="pr-5">
-              <span className="inline-flex items-center gap-1 rounded-full bg-secondary px-2.5 py-1 text-xs font-semibold text-secondary-foreground">
-                <HugeiconsIcon icon={Bone02Icon} className="h-3 w-3" strokeWidth={2.4} />
+              <span className="inline-flex items-center gap-1 rounded-full bg-primary/12 px-2.5 py-1 text-xs font-semibold text-primary">
+                <PawIcon className="h-3 w-3" />
                 {client.animalsCount}
               </span>
             </TableCell>

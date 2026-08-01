@@ -50,8 +50,7 @@ export function ClientsCard({
   headerAction,
 }: ClientsCardProps) {
   return (
-    <div className="overflow-hidden rounded-lg border border-border bg-card shadow-sm">
-      {/* Toolbar */}
+    <div>
       <div className="flex flex-wrap items-center justify-between gap-4 border-b border-border p-4">
         <div className="relative w-full max-w-sm">
           <HugeiconsIcon
@@ -70,10 +69,8 @@ export function ClientsCard({
         {headerAction}
       </div>
 
-      {/* Content */}
       <ClientsTable clients={pageClients} />
 
-      {/* Footer: page size + pagination */}
       <div className="flex flex-wrap items-center justify-between gap-4 border-t border-border px-4 py-3">
         <div className="flex items-center gap-2 text-sm text-muted-foreground">
           <span>Lignes par page</span>

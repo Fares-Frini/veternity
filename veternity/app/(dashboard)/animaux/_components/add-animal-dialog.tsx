@@ -1,10 +1,9 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
+import { useState, type FormEvent, type ReactNode } from "react";
 import { HugeiconsIcon, type IconSvgElement } from "@hugeicons/react";
 import {
   BirdIcon,
-  Bone02Icon,
   CameraAdd01Icon,
   Cancel01Icon,
   CarrotIcon,
@@ -24,7 +23,7 @@ import {
   UserIcon,
   VaccineIcon,
 } from "@hugeicons/core-free-icons";
-import { PawIcon } from "@/components/layout/icons";
+import { PawIcon, type IconComponent } from "@/components/layout/icons";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import {
@@ -114,7 +113,6 @@ const EMPTY_FORM = {
   history: "",
 };
 
-/** Adds or removes `item` from a comma-separated field value, used by the suggestion chips. */
 function toggleListValue(value: string, item: string) {
   const items = value
     .split(",")
@@ -163,11 +161,24 @@ function SuggestionChips({
   );
 }
 
-function SectionLabel({ icon, title, hint }: { icon: IconSvgElement; title: string; hint: string }) {
+function SectionLabel({
+  icon,
+  title,
+  hint,
+}: {
+  icon: IconSvgElement | IconComponent;
+  title: string;
+  hint: string;
+}) {
+  const CustomIcon = typeof icon === "function" ? icon : null;
   return (
     <div className="flex items-center gap-2.5">
       <span className="flex h-7 w-7 items-center justify-center rounded-md bg-card text-muted-foreground shadow-sm">
-        <HugeiconsIcon icon={icon} className="h-3.5 w-3.5" strokeWidth={2.2} />
+        {CustomIcon ? (
+          <CustomIcon className="h-3.5 w-3.5" strokeWidth={2.2} />
+        ) : (
+          <HugeiconsIcon icon={icon as IconSvgElement} className="h-3.5 w-3.5" strokeWidth={2.2} />
+        )}
       </span>
       <div className="flex flex-col leading-tight">
         <span className="text-sm font-bold text-foreground">{title}</span>
@@ -181,9 +192,10 @@ interface AddAnimalDialogProps {
   owners: string[];
   onAdd: (animal: Animal) => void;
   onAddClient: (client: Client) => void;
+  trigger?: ReactNode;
 }
 
-export function AddAnimalDialog({ owners, onAdd, onAddClient }: AddAnimalDialogProps) {
+export function AddAnimalDialog({ owners, onAdd, onAddClient, trigger }: AddAnimalDialogProps) {
   const [open, setOpen] = useState(false);
   const [form, setForm] = useState(EMPTY_FORM);
   const [ownerOpen, setOwnerOpen] = useState(false);
@@ -221,7 +233,7 @@ export function AddAnimalDialog({ owners, onAdd, onAddClient }: AddAnimalDialogP
 
   return (
     <>
-    <Dialog
+      <Dialog
       open={open}
       onOpenChange={(next) => {
         setOpen(next);
@@ -232,14 +244,15 @@ export function AddAnimalDialog({ owners, onAdd, onAddClient }: AddAnimalDialogP
       }}
     >
       <DialogTrigger asChild>
-        <Button className="gap-1.5 bg-primary hover:bg-primary/90">
-          <HugeiconsIcon icon={PlusSignIcon} className="h-4 w-4" strokeWidth={2.4} />
-          Ajouter
-        </Button>
+        {trigger ?? (
+          <Button className="gap-1.5 bg-primary hover:bg-primary/90">
+            <HugeiconsIcon icon={PlusSignIcon} className="h-4 w-4" strokeWidth={2.4} />
+            Ajouter
+          </Button>
+        )}
       </DialogTrigger>
 
       <DialogContent className="max-h-[94vh] w-full max-w-5xl gap-0 overflow-y-auto rounded-lg p-0 sm:max-w-5xl" showCloseButton={false}>
-        {/* Header fin */}
         <div className="relative flex items-center justify-between bg-primary px-6 py-1.5 text-primary-foreground">
           <DialogHeader className="gap-0">
             <DialogTitle className="text-sm font-bold text-primary-foreground">Ajouter un animal</DialogTitle>
@@ -257,11 +270,9 @@ export function AddAnimalDialog({ owners, onAdd, onAddClient }: AddAnimalDialogP
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-6 px-8 pt-6 pb-3">
           <div className="grid grid-cols-2 gap-x-10 gap-y-6">
-            {/* Left column */}
             <div className="flex flex-col gap-6">
-              {/* Identité */}
               <div className="flex flex-col gap-4 rounded-xl border border-border bg-muted p-5">
-                <SectionLabel icon={Bone02Icon} title="Identité" hint="Nom, espèce, race et sexe de l'animal" />
+                <SectionLabel icon={PawIcon} title="Identité" hint="Nom, espèce, race et sexe de l'animal" />
 
                 <div className="flex items-end gap-3">
                   <button
@@ -347,7 +358,6 @@ export function AddAnimalDialog({ owners, onAdd, onAddClient }: AddAnimalDialogP
                 </div>
               </div>
 
-              {/* Propriétaire */}
               <div className="flex flex-col gap-4 rounded-xl border border-border bg-muted p-5">
                 <SectionLabel icon={UserIcon} title="Propriétaire" hint="Le client rattaché à ce dossier" />
 
@@ -407,7 +417,7 @@ export function AddAnimalDialog({ owners, onAdd, onAddClient }: AddAnimalDialogP
                             setAddClientOpen(true);
                           }}
                           className={cn(
-                            "flex w-full items-center gap-2 rounded-md px-2.5 py-2 text-left text-sm font-medium text-primary hover:bg-secondary",
+                            "flex w-full items-center gap-2 rounded-md px-2.5 py-2 text-left text-sm font-medium text-primary hover:bg-primary/10",
                             filteredOwners.length > 0 && "mt-1 border-t border-border pt-2",
                           )}
                         >
@@ -424,7 +434,6 @@ export function AddAnimalDialog({ owners, onAdd, onAddClient }: AddAnimalDialogP
                 </div>
               </div>
 
-              {/* Caractéristiques */}
               <div className="flex flex-col gap-4 rounded-xl border border-border bg-muted p-5">
                 <SectionLabel icon={Calendar03Icon} title="Caractéristiques" hint="Apparence, âge et poids" />
 
@@ -467,9 +476,7 @@ export function AddAnimalDialog({ owners, onAdd, onAddClient }: AddAnimalDialogP
               </div>
             </div>
 
-            {/* Right column */}
             <div className="flex flex-col gap-6">
-              {/* Santé */}
               <div className="flex flex-col gap-4 rounded-xl border border-border bg-muted p-5">
                 <SectionLabel icon={StethoscopeIcon} title="Santé" hint="Statut médical et antécédents" />
 

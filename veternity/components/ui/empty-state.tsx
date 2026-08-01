@@ -21,7 +21,7 @@ export function EmptyState({
         className
       )}
     >
-      <span className="flex h-14 w-14 items-center justify-center rounded-full border-2 border-dashed border-primary/30 bg-secondary text-primary">
+      <span className="flex h-14 w-14 items-center justify-center rounded-full border-2 border-dashed border-primary/30 bg-primary/10 text-primary transition-colors duration-300 ease-out">
         <HugeiconsIcon icon={icon} className="h-6 w-6" strokeWidth={2} />
       </span>
       <div className="space-y-1">
