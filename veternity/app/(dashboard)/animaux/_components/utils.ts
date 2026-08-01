@@ -1,5 +1,5 @@
-import type { IconSvgElement } from "@hugeicons/react";
 import { BirdIcon, CarrotIcon, CatIcon, FootprintsIcon } from "@hugeicons/core-free-icons";
+import type { IconSvgElement } from "@hugeicons/react";
 
 export const SPECIES_COLOR: Record<string, string> = {
   Chat: "bg-status-purple-bg text-status-purple",

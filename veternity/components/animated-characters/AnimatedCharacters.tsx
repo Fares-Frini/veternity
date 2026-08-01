@@ -1,12 +1,12 @@
 "use client";
 
-import { useEffect, useRef, type CSSProperties } from "react";
 import gsap from "gsap";
+import { useEffect, useRef, type CSSProperties } from "react";
 import Pupil from "./Pupil";
-import HorseBody from "./bodies/Horse";
 import CatBody from "./bodies/Cat";
 import CowBody from "./bodies/Cow";
 import DogBody from "./bodies/Dog";
+import HorseBody from "./bodies/Horse";
 
 export type Who = "horse" | "cat" | "cow" | "dog";
 

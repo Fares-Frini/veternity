@@ -1,5 +1,5 @@
-import { PawIcon } from "@/components/layout/icons";
 import AnimatedCharacters from "@/components/animated-characters/AnimatedCharacters";
+import { PawIcon } from "@/components/layout/icons";
 
 export function DashboardBanner() {
   return (

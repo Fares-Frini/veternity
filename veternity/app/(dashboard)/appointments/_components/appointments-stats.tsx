@@ -1,10 +1,10 @@
-import { HugeiconsIcon } from "@hugeicons/react";
-import { Cancel01Icon, Clock01Icon } from "@hugeicons/core-free-icons";
 import { CalendarIcon, type IconComponent } from "@/components/layout/icons";
 import { PAGE_THEMES } from "@/components/layout/page-theme";
+import { Cancel01Icon, Clock01Icon } from "@hugeicons/core-free-icons";
+import { HugeiconsIcon } from "@hugeicons/react";
 import { StatCard } from "../../_components/stat-card";
 import type { Appointment } from "./data";
-import { todayKey, toDateKey, weekRange } from "./utils";
+import { toDateKey, todayKey, weekRange } from "./utils";
 
 const ClockIcon: IconComponent = (props) => <HugeiconsIcon icon={Clock01Icon} {...props} />;
 const CancelIcon: IconComponent = (props) => <HugeiconsIcon icon={Cancel01Icon} {...props} />;

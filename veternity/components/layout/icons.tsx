@@ -1,22 +1,22 @@
-import type { CSSProperties, ReactElement } from "react";
-import { HugeiconsIcon } from "@hugeicons/react";
 import {
-  ArrowDown01Icon,
-  Calendar03Icon,
-  ChartBarLineIcon,
-  Home01Icon,
-  Invoice01Icon,
-  Logout01Icon,
-  Notification03Icon,
-  Package01Icon,
-  PillIcon as PillIconData,
-  PlusSignIcon,
-  Search01Icon,
-  Settings01Icon,
-  SidebarLeft01Icon,
-  StethoscopeIcon as StethoscopeIconData,
-  UserGroupIcon,
+    ArrowDown01Icon,
+    Calendar03Icon,
+    ChartBarLineIcon,
+    Home01Icon,
+    Invoice01Icon,
+    Logout01Icon,
+    Notification03Icon,
+    Package01Icon,
+    PillIcon as PillIconData,
+    PlusSignIcon,
+    Search01Icon,
+    Settings01Icon,
+    SidebarLeft01Icon,
+    StethoscopeIcon as StethoscopeIconData,
+    UserGroupIcon,
 } from "@hugeicons/core-free-icons";
+import { HugeiconsIcon } from "@hugeicons/react";
+import type { CSSProperties, ReactElement } from "react";
 
 export type IconProps = { className?: string; strokeWidth?: number; style?: CSSProperties };
 export type IconComponent = (props: IconProps) => ReactElement;

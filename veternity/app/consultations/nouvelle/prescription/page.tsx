@@ -1,27 +1,27 @@
 "use client";
 
-import { Suspense, useMemo, useState, type FormEvent } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
-import { HugeiconsIcon } from "@hugeicons/react";
-import { Calendar03Icon, ClipboardCheckIcon, Medicine02Icon, PillIcon, StethoscopeIcon } from "@hugeicons/core-free-icons";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
-import { Badge } from "@/components/ui/badge";
-import { EmptyState } from "@/components/ui/empty-state";
 import { ANIMALS } from "@/app/(dashboard)/animaux/_components/data";
 import { VETS } from "@/app/(dashboard)/appointments/_components/data";
 import { CONSULTATIONS } from "@/app/(dashboard)/consultations/(tabs)/liste/_components/data";
 import { STATUS_META, formatDate } from "@/app/(dashboard)/consultations/(tabs)/liste/_components/utils";
 import { PRESCRIPTIONS } from "@/app/(dashboard)/consultations/(tabs)/prescriptions/_components/data";
-import { EditorTopbar } from "../_components/editor-topbar";
-import { BookSpine } from "../_components/book-spine";
-import { AnimalIdCard } from "../_components/animal-id-card";
-import { ClinicalNote } from "../_components/clinical-note";
-import { SectionLabel } from "../_components/section-label";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { EmptyState } from "@/components/ui/empty-state";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
+import { Calendar03Icon, ClipboardCheckIcon, Medicine02Icon, PillIcon, StethoscopeIcon } from "@hugeicons/core-free-icons";
+import { HugeiconsIcon } from "@hugeicons/react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { Suspense, useMemo, useState, type FormEvent } from "react";
 import { AiChat } from "../_components/ai-chat";
+import { AnimalIdCard } from "../_components/animal-id-card";
+import { BookSpine } from "../_components/book-spine";
+import { ClinicalNote } from "../_components/clinical-note";
+import { EditorTopbar } from "../_components/editor-topbar";
+import { SectionLabel } from "../_components/section-label";
 
 function PrescriptionForm() {
   const router = useRouter();

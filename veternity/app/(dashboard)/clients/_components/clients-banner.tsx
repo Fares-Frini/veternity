@@ -1,5 +1,5 @@
-import { UsersIcon } from "@/components/layout/icons";
 import AnimatedCharacters from "@/components/animated-characters/AnimatedCharacters";
+import { UsersIcon } from "@/components/layout/icons";
 
 export function ClientsBanner() {
   return (

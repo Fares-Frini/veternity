@@ -1,5 +1,5 @@
-import { CalendarIcon } from "@/components/layout/icons";
 import AnimatedCharacters from "@/components/animated-characters/AnimatedCharacters";
+import { CalendarIcon } from "@/components/layout/icons";
 
 export function AppointmentsBanner() {
   return (

@@ -1,14 +1,5 @@
 "use client";
 
-import { useState, type FormEvent, type ReactNode } from "react";
-import { HugeiconsIcon, type IconSvgElement } from "@hugeicons/react";
-import {
-  Calendar03Icon,
-  Cancel01Icon,
-  PillIcon,
-  PlusSignIcon,
-  Search01Icon,
-} from "@hugeicons/core-free-icons";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
@@ -16,6 +7,15 @@ import { Label } from "@/components/ui/label";
 import { Popover, PopoverAnchor, PopoverContent } from "@/components/ui/popover";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
+import {
+    Calendar03Icon,
+    Cancel01Icon,
+    PillIcon,
+    PlusSignIcon,
+    Search01Icon,
+} from "@hugeicons/core-free-icons";
+import { HugeiconsIcon, type IconSvgElement } from "@hugeicons/react";
+import { useState, type FormEvent, type ReactNode } from "react";
 import { ANIMALS } from "../../../../animaux/_components/data";
 import { VETS } from "../../../../appointments/_components/data";
 import type { Prescription } from "./data";

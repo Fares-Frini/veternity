@@ -1,45 +1,45 @@
 "use client";
 
-import { useState, type FormEvent, type ReactNode } from "react";
-import { HugeiconsIcon, type IconSvgElement } from "@hugeicons/react";
-import {
-  BirdIcon,
-  CameraAdd01Icon,
-  Cancel01Icon,
-  CarrotIcon,
-  Calendar03Icon,
-  CatIcon,
-  CheckmarkCircle02Icon,
-  EggIcon,
-  FemaleSymbolIcon,
-  FloppyDiskIcon,
-  FootprintsIcon,
-  MaleSymbolIcon,
-  NutIcon,
-  PlusSignIcon,
-  Scissor01Icon,
-  Search01Icon,
-  StethoscopeIcon,
-  UserIcon,
-  VaccineIcon,
-} from "@hugeicons/core-free-icons";
 import { PawIcon, type IconComponent } from "@/components/layout/icons";
-import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
+    Dialog,
+    DialogContent,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Popover, PopoverAnchor, PopoverContent } from "@/components/ui/popover";
 import { Textarea } from "@/components/ui/textarea";
-import type { Animal } from "./data";
+import { cn } from "@/lib/utils";
+import {
+    BirdIcon,
+    Calendar03Icon,
+    CameraAdd01Icon,
+    Cancel01Icon,
+    CarrotIcon,
+    CatIcon,
+    CheckmarkCircle02Icon,
+    EggIcon,
+    FemaleSymbolIcon,
+    FloppyDiskIcon,
+    FootprintsIcon,
+    MaleSymbolIcon,
+    NutIcon,
+    PlusSignIcon,
+    Scissor01Icon,
+    Search01Icon,
+    StethoscopeIcon,
+    UserIcon,
+    VaccineIcon,
+} from "@hugeicons/core-free-icons";
+import { HugeiconsIcon, type IconSvgElement } from "@hugeicons/react";
+import { useState, type FormEvent, type ReactNode } from "react";
 import { AddClientDialog } from "../../clients/_components/add-client-dialog";
 import type { Client } from "../../clients/_components/data";
+import type { Animal } from "./data";
 
 const SPECIES_THEME: Record<string, { gradient: string; accent: string; soft: string }> = {
   Chat: {

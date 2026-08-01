@@ -1,8 +1,8 @@
-import { HugeiconsIcon } from "@hugeicons/react";
-import { FemaleSymbolIcon, MaleSymbolIcon } from "@hugeicons/core-free-icons";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import type { Animal } from "@/app/(dashboard)/animaux/_components/data";
 import { SPECIES_COLOR, SPECIES_ICON } from "@/app/(dashboard)/animaux/_components/utils";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { FemaleSymbolIcon, MaleSymbolIcon } from "@hugeicons/core-free-icons";
+import { HugeiconsIcon } from "@hugeicons/react";
 
 function formatAge(birthDate: string, asOf: string) {
   const birth = new Date(birthDate);

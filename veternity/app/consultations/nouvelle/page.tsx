@@ -3,9 +3,9 @@
 import { ANIMALS } from "@/app/(dashboard)/animaux/_components/data";
 import { VETS } from "@/app/(dashboard)/appointments/_components/data";
 import {
-  CONSULTATIONS,
-  type Consultation,
-  type ConsultationStatus,
+    CONSULTATIONS,
+    type Consultation,
+    type ConsultationStatus,
 } from "@/app/(dashboard)/consultations/(tabs)/liste/_components/data";
 import { STATUS_META, formatDate } from "@/app/(dashboard)/consultations/(tabs)/liste/_components/utils";
 import { PawIcon } from "@/components/layout/icons";
@@ -18,13 +18,13 @@ import { Popover, PopoverAnchor, PopoverContent } from "@/components/ui/popover"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import {
-  AiMagicIcon,
-  ArrowLeft01Icon,
-  Calendar03Icon,
-  ClipboardCheckIcon,
-  PillIcon,
-  Search01Icon,
-  StethoscopeIcon,
+    AiMagicIcon,
+    ArrowLeft01Icon,
+    Calendar03Icon,
+    ClipboardCheckIcon,
+    PillIcon,
+    Search01Icon,
+    StethoscopeIcon,
 } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { useRouter } from "next/navigation";

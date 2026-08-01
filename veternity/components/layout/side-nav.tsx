@@ -1,18 +1,18 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useEffect, useRef, useState } from "react";
 import {
-  BoxIcon,
-  CalendarIcon,
-  HomeIcon,
-  LogOutIcon,
-  PawIcon,
-  SettingsIcon,
-  SidebarIcon,
-  StethoscopeIcon,
-  UsersIcon,
+    BoxIcon,
+    CalendarIcon,
+    HomeIcon,
+    LogOutIcon,
+    PawIcon,
+    SettingsIcon,
+    SidebarIcon,
+    StethoscopeIcon,
+    UsersIcon,
 } from "./icons";
 
 const NAV_ITEMS = [

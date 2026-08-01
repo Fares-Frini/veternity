@@ -1,16 +1,16 @@
 "use client";
 
-import type { ComponentProps } from "react";
-import Link from "next/link";
-import { PAGE_THEMES } from "@/components/layout/page-theme";
 import { BoxIcon, CalendarIcon, PawIcon, UsersIcon, type IconComponent } from "@/components/layout/icons";
+import { PAGE_THEMES } from "@/components/layout/page-theme";
 import { cn } from "@/lib/utils";
+import Link from "next/link";
+import type { ComponentProps } from "react";
 import { AddAnimalDialog } from "../animaux/_components/add-animal-dialog";
-import { AddClientDialog } from "../clients/_components/add-client-dialog";
-import { AddAppointmentDialog } from "../appointments/_components/add-appointment-dialog";
 import { ANIMALS } from "../animaux/_components/data";
-import { CLIENTS } from "../clients/_components/data";
+import { AddAppointmentDialog } from "../appointments/_components/add-appointment-dialog";
 import { APPOINTMENTS } from "../appointments/_components/data";
+import { AddClientDialog } from "../clients/_components/add-client-dialog";
+import { CLIENTS } from "../clients/_components/data";
 function ActionTrigger({
   icon: Icon,
   label,

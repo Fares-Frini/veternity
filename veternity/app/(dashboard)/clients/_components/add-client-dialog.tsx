@@ -1,12 +1,12 @@
 "use client";
 
-import { useState, type FormEvent, type ReactNode } from "react";
-import { HugeiconsIcon, type IconSvgElement } from "@hugeicons/react";
-import { Cancel01Icon, Mail01Icon, MapPinIcon, PlusSignIcon, SmartPhone01Icon, UserIcon } from "@hugeicons/core-free-icons";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Cancel01Icon, Mail01Icon, MapPinIcon, PlusSignIcon, SmartPhone01Icon, UserIcon } from "@hugeicons/core-free-icons";
+import { HugeiconsIcon, type IconSvgElement } from "@hugeicons/react";
+import { useState, type FormEvent, type ReactNode } from "react";
 import type { Client } from "./data";
 
 const EMPTY_FORM = {

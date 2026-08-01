@@ -1,12 +1,12 @@
 "use client";
 
-import { useEffect, useRef, useState, type FormEvent } from "react";
-import { HugeiconsIcon } from "@hugeicons/react";
-import { AiChat02Icon, Cancel01Icon, SentIcon, StethoscopeIcon } from "@hugeicons/core-free-icons";
+import type { Animal } from "@/app/(dashboard)/animaux/_components/data";
+import { PawIcon } from "@/components/layout/icons";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { PawIcon } from "@/components/layout/icons";
-import type { Animal } from "@/app/(dashboard)/animaux/_components/data";
+import { AiChat02Icon, Cancel01Icon, SentIcon, StethoscopeIcon } from "@hugeicons/core-free-icons";
+import { HugeiconsIcon } from "@hugeicons/react";
+import { useEffect, useRef, useState, type FormEvent } from "react";
 
 interface ChatMessage {
   id: string;

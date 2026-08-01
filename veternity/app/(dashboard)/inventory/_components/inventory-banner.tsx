@@ -1,5 +1,5 @@
-import { BoxIcon } from "@/components/layout/icons";
 import AnimatedCharacters from "@/components/animated-characters/AnimatedCharacters";
+import { BoxIcon } from "@/components/layout/icons";
 
 export function InventoryBanner() {
   return (

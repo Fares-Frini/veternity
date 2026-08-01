@@ -1,11 +1,11 @@
 "use client";
 
-import { useMemo, useState } from "react";
-import { HugeiconsIcon } from "@hugeicons/react";
-import { ArrowLeft01Icon, ArrowRight01Icon } from "@hugeicons/core-free-icons";
 import { Button } from "@/components/ui/button";
+import { ArrowLeft01Icon, ArrowRight01Icon } from "@hugeicons/core-free-icons";
+import { HugeiconsIcon } from "@hugeicons/react";
+import { useMemo, useState } from "react";
 import type { Appointment } from "./data";
-import { STATUS_META, toDateKey, todayKey as getTodayKey } from "./utils";
+import { todayKey as getTodayKey, STATUS_META, toDateKey } from "./utils";
 
 const WEEKDAY_LABELS = ["Lun", "Mar", "Mer", "Jeu", "Ven", "Sam", "Dim"];
 const MAX_VISIBLE_PER_DAY = 3;

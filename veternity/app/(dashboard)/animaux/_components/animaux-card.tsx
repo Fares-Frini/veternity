@@ -1,23 +1,23 @@
 "use client";
 
-import type { ReactNode } from "react";
-import { HugeiconsIcon } from "@hugeicons/react";
-import { GridViewIcon, ListViewIcon, Search01Icon } from "@hugeicons/core-free-icons";
 import { Input } from "@/components/ui/input";
-import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import {
-  Pagination,
-  PaginationContent,
-  PaginationEllipsis,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
+    Pagination,
+    PaginationContent,
+    PaginationEllipsis,
+    PaginationItem,
+    PaginationLink,
+    PaginationNext,
+    PaginationPrevious,
 } from "@/components/ui/pagination";
-import type { Animal } from "./data";
-import { AnimauxTable } from "./animaux-table";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
+import { GridViewIcon, ListViewIcon, Search01Icon } from "@hugeicons/core-free-icons";
+import { HugeiconsIcon } from "@hugeicons/react";
+import type { ReactNode } from "react";
 import { AnimauxGrid } from "./animaux-grid";
+import { AnimauxTable } from "./animaux-table";
+import type { Animal } from "./data";
 import { getPageNumbers } from "./utils";
 
 export type AnimauxView = "list" | "grid";

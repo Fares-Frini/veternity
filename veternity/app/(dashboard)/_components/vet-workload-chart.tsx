@@ -1,8 +1,8 @@
 "use client";
 
-import { Doughnut } from "react-chartjs-2";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { PAGE_THEMES } from "@/components/layout/page-theme";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Doughnut } from "react-chartjs-2";
 import { APPOINTMENTS, VETS } from "../appointments/_components/data";
 const PALETTE = [
   PAGE_THEMES.dashboard.accent,

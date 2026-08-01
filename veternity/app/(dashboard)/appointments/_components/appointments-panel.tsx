@@ -1,13 +1,13 @@
 "use client";
 
-import type { ReactNode } from "react";
-import { HugeiconsIcon } from "@hugeicons/react";
-import { Calendar03Icon, ListViewIcon, Search01Icon } from "@hugeicons/core-free-icons";
 import { Input } from "@/components/ui/input";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
-import type { Appointment, AppointmentStatus } from "./data";
+import { Calendar03Icon, ListViewIcon, Search01Icon } from "@hugeicons/core-free-icons";
+import { HugeiconsIcon } from "@hugeicons/react";
+import type { ReactNode } from "react";
 import { AppointmentsAgenda } from "./appointments-agenda";
 import { AppointmentsCalendar } from "./appointments-calendar";
+import type { Appointment, AppointmentStatus } from "./data";
 import { STATUS_META } from "./utils";
 
 export type AppointmentsView = "list" | "calendar";

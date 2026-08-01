@@ -1,5 +1,5 @@
+import { Cancel01Icon, CheckmarkCircle02Icon, Clock01Icon } from "@hugeicons/core-free-icons";
 import type { IconSvgElement } from "@hugeicons/react";
-import { CheckmarkCircle02Icon, Clock01Icon, Cancel01Icon } from "@hugeicons/core-free-icons";
 import type { AppointmentStatus } from "./data";
 
 export const STATUS_META: Record<AppointmentStatus, { bg: string; text: string; bar: string; icon: IconSvgElement }> = {
