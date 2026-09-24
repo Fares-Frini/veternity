@@ -2,6 +2,7 @@
 
 > **Ce document est la référence.** Le fichier `prisma/schema.prisma` de l'API, les services et les tests en découlent.
 > Toute modification du modèle commence ici (diagramme + règles), dans la même pull request que la migration Prisma.
+> Voir [`../STATUS.md`](../STATUS.md) pour l'état d'avancement général du projet.
 
 Base : PostgreSQL 16 · ORM : Prisma · Extensions : `citext`, `pg_trgm`, `btree_gist`.
 

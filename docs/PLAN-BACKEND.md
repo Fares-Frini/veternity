@@ -1,6 +1,6 @@
 # Veternity — Plan d'intégration backend
 
-> Statut : **planification**, rien n'est implémenté.
+> **Avant de lire ce document : voir [`STATUS.md`](STATUS.md)** pour savoir où en est le projet et quelle est la prochaine étape concrète. Ce fichier-ci est le plan complet et stable ; `STATUS.md` est l'état, mis à jour à chaque session.
 > Organisation : **deux dépôts séparés** (frontend `veternity`, API `veternity-api`), pas de monorepo.
 > Modèle de données de référence : [`database/SCHEMA.md`](database/SCHEMA.md).
 > Stack cible : Next.js 16 (existant) · NestJS · PostgreSQL · Prisma · Redis · Multer · serveur mail · Docker.

@@ -1,36 +1,28 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Veternity — Frontend
 
-## Getting Started
+Application de gestion pour clinique vétérinaire : rendez-vous, consultations, ordonnances, facturation, inventaire.
 
-First, run the development server:
+Next.js 16 (App Router) · React 19 · Tailwind CSS 4 · shadcn/ui · HugeIcons.
+
+## Avant de travailler sur ce dépôt
+
+👉 **[`../docs/STATUS.md`](../docs/STATUS.md)** — état d'avancement du projet et prochaine étape. À lire en premier, à chaque reprise.
+
+Aussi dans `../docs/` :
+- [`PLAN-BACKEND.md`](../docs/PLAN-BACKEND.md) — plan complet de l'intégration backend (NestJS, PostgreSQL, Prisma, Redis, Multer, mail), phase par phase.
+- [`database/SCHEMA.md`](../docs/database/SCHEMA.md) — modèle de données de référence (diagrammes, règles d'intégrité, cycles de vie). Toute logique métier doit s'y conformer.
+
+> Ces documents déménageront dans le dépôt `veternity-api` dès sa création (voir `PLAN-BACKEND.md` §2.1) ; ce lien sera mis à jour à ce moment-là.
+
+## Démarrer
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
+pnpm install
 pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Ouvrir [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## État actuel
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Le frontend fonctionne aujourd'hui avec des données de démonstration en mémoire (`app/**/_components/*-data.ts`), sans backend ni authentification réelle — voir `docs/STATUS.md` pour ce qui est en cours.
