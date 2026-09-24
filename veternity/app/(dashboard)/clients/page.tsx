@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 import { ClientsBanner } from "./_components/clients-banner";
 import { ClientsCard } from "./_components/clients-card";
 import { AddClientDialog } from "./_components/add-client-dialog";
+import { ClientDetailDialog } from "./_components/client-detail-dialog";
 import { CLIENTS, type Client } from "./_components/data";
 
 export default function ClientsPage() {
@@ -11,6 +12,7 @@ export default function ClientsPage() {
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
+  const [selectedClient, setSelectedClient] = useState<Client | null>(null);
 
   const filteredClients = useMemo(() => {
     const query = search.trim().toLowerCase();
@@ -60,7 +62,13 @@ export default function ClientsPage() {
         onPageSizeChange={handlePageSizeChange}
         rangeStart={rangeStart}
         rangeEnd={rangeEnd}
+        onRowClick={setSelectedClient}
         headerAction={<AddClientDialog onAdd={handleAddClient} />}
+      />
+      <ClientDetailDialog
+        client={selectedClient}
+        open={selectedClient !== null}
+        onOpenChange={(open) => !open && setSelectedClient(null)}
       />
     </div>
   );

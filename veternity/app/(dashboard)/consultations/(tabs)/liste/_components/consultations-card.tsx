@@ -33,6 +33,7 @@ interface ConsultationsCardProps {
   rangeStart: number;
   rangeEnd: number;
   headerAction?: ReactNode;
+  onSelect?: (consultation: Consultation) => void;
 }
 
 export function ConsultationsCard({
@@ -48,6 +49,7 @@ export function ConsultationsCard({
   rangeStart,
   rangeEnd,
   headerAction,
+  onSelect,
 }: ConsultationsCardProps) {
   return (
     <div className="overflow-hidden rounded-lg border border-border bg-card shadow-sm">
@@ -69,7 +71,7 @@ export function ConsultationsCard({
         {headerAction}
       </div>
 
-      <ConsultationsTable consultations={pageConsultations} />
+      <ConsultationsTable consultations={pageConsultations} onSelect={onSelect} />
 
       <div className="flex flex-wrap items-center justify-between gap-4 border-t border-border px-4 py-3">
         <div className="flex items-center gap-2 text-sm text-muted-foreground">

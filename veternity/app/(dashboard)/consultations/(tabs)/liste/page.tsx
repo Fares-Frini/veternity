@@ -5,12 +5,15 @@ import Link from "next/link";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { PlusSignIcon } from "@hugeicons/core-free-icons";
 import { Button } from "@/components/ui/button";
+import { ConsultationDetailDialog } from "./_components/consultation-detail-dialog";
 import { ConsultationsCard } from "./_components/consultations-card";
 import { CONSULTATIONS, type Consultation } from "./_components/data";
 
 export default function ConsultationsListePage() {
   const [consultations] = useState<Consultation[]>(CONSULTATIONS);
   const [search, setSearch] = useState("");
+  const [selected, setSelected] = useState<Consultation | null>(null);
+  const [detailOpen, setDetailOpen] = useState(false);
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
 
@@ -39,6 +42,7 @@ export default function ConsultationsListePage() {
   const pageConsultations = filteredConsultations.slice(rangeStart - 1, rangeEnd);
 
   return (
+    <>
     <ConsultationsCard
       search={search}
       onSearchChange={handleSearchChange}
@@ -51,6 +55,10 @@ export default function ConsultationsListePage() {
       onPageSizeChange={handlePageSizeChange}
       rangeStart={rangeStart}
       rangeEnd={rangeEnd}
+      onSelect={(c) => {
+        setSelected(c);
+        setDetailOpen(true);
+      }}
       headerAction={
         <Button asChild className="gap-1.5 bg-primary hover:bg-primary/90">
           <Link href="/consultations/nouvelle">
@@ -60,5 +68,7 @@ export default function ConsultationsListePage() {
         </Button>
       }
     />
+    <ConsultationDetailDialog consultation={selected} open={detailOpen} onOpenChange={setDetailOpen} />
+    </>
   );
 }

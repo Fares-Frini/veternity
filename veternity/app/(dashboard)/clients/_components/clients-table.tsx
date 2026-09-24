@@ -5,7 +5,13 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { PawIcon } from "@/components/layout/icons";
 import type { Client } from "./data";
 
-export function ClientsTable({ clients }: { clients: Client[] }) {
+export function ClientsTable({
+  clients,
+  onRowClick,
+}: {
+  clients: Client[];
+  onRowClick?: (client: Client) => void;
+}) {
   return (
     <Table>
       <TableHeader>
@@ -20,7 +26,11 @@ export function ClientsTable({ clients }: { clients: Client[] }) {
       </TableHeader>
       <TableBody>
         {clients.map((client) => (
-          <TableRow key={client.id} className="border-border">
+          <TableRow
+            key={client.id}
+            className="cursor-pointer border-border"
+            onClick={() => onRowClick?.(client)}
+          >
             <TableCell className="pl-5 font-mono text-xs text-muted-foreground">#{client.id}</TableCell>
             <TableCell>
               <div className="flex items-center gap-2.5">

@@ -7,7 +7,7 @@ import { HugeiconsIcon } from "@hugeicons/react";
 import type { ReactNode } from "react";
 import { AppointmentsAgenda } from "./appointments-agenda";
 import { AppointmentsCalendar } from "./appointments-calendar";
-import type { Appointment, AppointmentStatus } from "./data";
+import type { Appointment, AppointmentStatus, MovedAppointment } from "./data";
 import { STATUS_META } from "./utils";
 
 export type AppointmentsView = "list" | "calendar";
@@ -23,6 +23,8 @@ interface AppointmentsPanelProps {
   onViewChange: (view: AppointmentsView) => void;
   allAppointments: Appointment[];
   filteredAppointments: Appointment[];
+  movedAppointments?: MovedAppointment[];
+  onAppointmentClick?: (appointment: Appointment) => void;
   headerAction?: ReactNode;
 }
 
@@ -35,6 +37,8 @@ export function AppointmentsPanel({
   onViewChange,
   allAppointments,
   filteredAppointments,
+  movedAppointments,
+  onAppointmentClick,
   headerAction,
 }: AppointmentsPanelProps) {
   const countFor = (status: AppointmentStatus | "all") =>
@@ -70,22 +74,22 @@ export function AppointmentsPanel({
               <span
                 aria-hidden
                 className={`pointer-events-none absolute top-1 bottom-1 left-1 z-0 w-[calc(50%-4px)] rounded-sm bg-primary shadow-[inset_0_2px_4px_rgba(0,0,0,0.25),inset_0_-1px_1px_rgba(255,255,255,0.35)] transition-transform duration-300 ease-out ${
-                  view === "calendar" ? "translate-x-full" : "translate-x-0"
+                  view === "list" ? "translate-x-full" : "translate-x-0"
                 }`}
               />
-              <ToggleGroupItem
-                value="list"
-                aria-label="Vue agenda"
-                className="relative z-10 border-transparent bg-transparent data-[state=on]:bg-transparent data-[state=on]:text-primary-foreground"
-              >
-                <HugeiconsIcon icon={ListViewIcon} className="h-4 w-4" strokeWidth={2.2} />
-              </ToggleGroupItem>
               <ToggleGroupItem
                 value="calendar"
                 aria-label="Vue calendrier"
                 className="relative z-10 border-transparent bg-transparent data-[state=on]:bg-transparent data-[state=on]:text-primary-foreground"
               >
                 <HugeiconsIcon icon={Calendar03Icon} className="h-4 w-4" strokeWidth={2.2} />
+              </ToggleGroupItem>
+              <ToggleGroupItem
+                value="list"
+                aria-label="Vue agenda"
+                className="relative z-10 border-transparent bg-transparent data-[state=on]:bg-transparent data-[state=on]:text-primary-foreground"
+              >
+                <HugeiconsIcon icon={ListViewIcon} className="h-4 w-4" strokeWidth={2.2} />
               </ToggleGroupItem>
             </ToggleGroup>
 
@@ -126,10 +130,14 @@ export function AppointmentsPanel({
         </div>
       </div>
 
-      {view === "list" ? (
-        <AppointmentsAgenda appointments={filteredAppointments} />
+      {view === "calendar" ? (
+        <AppointmentsCalendar
+          appointments={filteredAppointments}
+          movedAppointments={movedAppointments}
+          onAppointmentClick={onAppointmentClick}
+        />
       ) : (
-        <AppointmentsCalendar appointments={filteredAppointments} />
+        <AppointmentsAgenda appointments={filteredAppointments} onAppointmentClick={onAppointmentClick} />
       )}
     </div>
   );

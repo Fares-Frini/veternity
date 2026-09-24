@@ -54,18 +54,21 @@ export function AiChat({ animal }: { animal?: Animal | null }) {
 
   return (
     <>
-      <button
-        type="button"
-        onClick={() => setOpen((v) => !v)}
-        aria-label={open ? "Fermer l'assistant IA" : "Ouvrir l'assistant IA"}
-        className="ai-shine-btn fixed bottom-6 left-6 z-40 flex h-14 w-14 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-xl transition-transform hover:scale-105"
-      >
-        {open ? (
-          <HugeiconsIcon icon={Cancel01Icon} className="h-6 w-6" strokeWidth={2.2} />
-        ) : (
-          <PawIcon className="h-6 w-6" />
-        )}
-      </button>
+      {/* .ai-shine-btn force `position: relative` : le positionnement fixe est porté par le conteneur. */}
+      <div className="fixed bottom-6 left-6 z-40">
+        <button
+          type="button"
+          onClick={() => setOpen((v) => !v)}
+          aria-label={open ? "Fermer l'assistant IA" : "Ouvrir l'assistant IA"}
+          className="ai-shine-btn flex h-14 w-14 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-xl transition-transform hover:scale-105"
+        >
+          {open ? (
+            <HugeiconsIcon icon={Cancel01Icon} className="h-6 w-6" strokeWidth={2.2} />
+          ) : (
+            <PawIcon className="h-6 w-6" />
+          )}
+        </button>
+      </div>
 
       {open && (
         <div className="animate-in fade-in-0 zoom-in-95 slide-in-from-bottom-4 fixed bottom-24 left-6 z-40 flex h-[480px] w-[360px] max-w-[calc(100vw-3rem)] origin-bottom-left flex-col overflow-hidden rounded-2xl border border-border bg-card shadow-2xl duration-200">

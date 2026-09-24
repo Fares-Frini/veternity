@@ -1,8 +1,9 @@
 import { HugeiconsIcon } from "@hugeicons/react";
-import { FemaleSymbolIcon, MaleSymbolIcon } from "@hugeicons/core-free-icons";
+import { FemaleSymbolIcon, MaleSymbolIcon, UserGroupIcon } from "@hugeicons/core-free-icons";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
 import type { Animal } from "./data";
-import { SPECIES_COLOR, SPECIES_ICON, formatDate } from "./utils";
+import { SPECIES_COLOR, SPECIES_ICON, formatCount, formatDate, formatWeight } from "./utils";
 
 export function AnimauxGrid({ animals }: { animals: Animal[] }) {
   if (animals.length === 0) {
@@ -18,6 +19,7 @@ export function AnimauxGrid({ animals }: { animals: Animal[] }) {
       {animals.map((animal) => {
         const speciesClasses = SPECIES_COLOR[animal.species] ?? "bg-muted text-muted-foreground";
         const speciesIcon = SPECIES_ICON[animal.species];
+        const isHerd = animal.kind === "troupeau";
         return (
           <div
             key={animal.id}
@@ -26,18 +28,33 @@ export function AnimauxGrid({ animals }: { animals: Animal[] }) {
             <div className="flex items-center justify-between">
               <Avatar className="h-12 w-12">
                 <AvatarFallback className={`text-sm font-bold ${speciesClasses}`}>
-                  {animal.name.slice(0, 2).toUpperCase()}
+                  {isHerd ? (
+                    <HugeiconsIcon icon={UserGroupIcon} className="h-5 w-5" strokeWidth={2.2} />
+                  ) : (
+                    animal.name.slice(0, 2).toUpperCase()
+                  )}
                 </AvatarFallback>
               </Avatar>
-              <HugeiconsIcon
-                icon={animal.sex === "M" ? MaleSymbolIcon : FemaleSymbolIcon}
-                className={`h-4 w-4 ${animal.sex === "M" ? "text-status-info" : "text-status-pink"}`}
-                strokeWidth={2.2}
-              />
+              {animal.sex === "Mixte" ? (
+                <span className="text-xs font-medium text-muted-foreground">Mixte</span>
+              ) : (
+                <HugeiconsIcon
+                  icon={animal.sex === "M" ? MaleSymbolIcon : FemaleSymbolIcon}
+                  className={`h-4 w-4 ${animal.sex === "M" ? "text-status-info" : "text-status-pink"}`}
+                  strokeWidth={2.2}
+                />
+              )}
             </div>
 
             <div>
-              <div className="font-bold text-foreground">{animal.name}</div>
+              <div className="flex items-center gap-2">
+                <span className="font-bold text-foreground">{animal.name}</span>
+                {isHerd && (
+                  <Badge variant="brown" className="h-4 px-1.5 text-[10px]">
+                    Troupeau
+                  </Badge>
+                )}
+              </div>
               <div className="mt-1 flex items-center gap-1.5 text-xs text-muted-foreground">
                 <span>#{animal.id}</span>
                 <span>·</span>
@@ -49,12 +66,16 @@ export function AnimauxGrid({ animals }: { animals: Animal[] }) {
             </div>
 
             <div className="grid grid-cols-2 gap-y-1.5 border-t border-border pt-3 text-xs text-muted-foreground">
+              <span>Effectif</span>
+              <span className="text-right font-medium text-foreground">{formatCount(animal)}</span>
               <span>Robe</span>
               <span className="text-right font-medium text-foreground">{animal.coat}</span>
               <span>Naissance</span>
-              <span className="text-right font-medium text-foreground">{formatDate(animal.birthDate)}</span>
-              <span>Poids</span>
-              <span className="text-right font-medium text-foreground">{animal.weightKg} kg</span>
+              <span className="text-right font-medium text-foreground">
+                {animal.birthDate ? formatDate(animal.birthDate) : "—"}
+              </span>
+              <span>{isHerd ? "Poids moyen" : "Poids"}</span>
+              <span className="text-right font-medium text-foreground">{formatWeight(animal)}</span>
               <span>Propriétaire</span>
               <span className="text-right font-medium text-foreground">{animal.owner}</span>
             </div>

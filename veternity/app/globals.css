@@ -88,14 +88,14 @@
   --chart-4: #7c5cf0;
   --chart-5: #e879b9;
   --radius: 0.625rem;
-  --sidebar: #0065e4;
-  --sidebar-foreground: #ffffff;
-  --sidebar-primary: #ffffff;
-  --sidebar-primary-foreground: #0065e4;
-  --sidebar-accent: rgb(255 255 255 / 0.1);
-  --sidebar-accent-foreground: #ffffff;
-  --sidebar-border: rgb(255 255 255 / 0.15);
-  --sidebar-ring: #ffffff;
+  --sidebar: #ffffff;
+  --sidebar-foreground: #1e2a4a;
+  --sidebar-primary: #0065e4;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #f3f6ff;
+  --sidebar-accent-foreground: #1e2a4a;
+  --sidebar-border: #eef0f5;
+  --sidebar-ring: #0065e4;
 
   --status-success: #16a34a;
   --status-success-bg: #e3f9ea;
@@ -137,14 +137,14 @@
   --chart-3: #fbbf24;
   --chart-4: #a78bfa;
   --chart-5: #f0abfc;
-  --sidebar: #003d8a;
+  --sidebar: oklch(0.205 0 0);
   --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.985 0 0);
-  --sidebar-primary-foreground: #003d8a;
-  --sidebar-accent: oklch(1 0 0 / 10%);
+  --sidebar-primary: #3188d5;
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.269 0 0);
   --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(1 0 0 / 15%);
-  --sidebar-ring: oklch(0.985 0 0);
+  --sidebar-border: oklch(1 0 0 / 10%);
+  --sidebar-ring: #3188d5;
 
   --status-success: #4ade80;
   --status-success-bg: oklch(0.269 0.05 150);
@@ -256,5 +256,32 @@
   .float-soft-slow,
   .sway-soft {
     animation: none;
+  }
+}
+/* Impression de documents (facture, ordonnance) : seul le conteneur .print-root est imprimé. */
+@media screen {
+  .print-root {
+    display: none;
+  }
+}
+
+@media print {
+  @page {
+    size: A4;
+    margin: 14mm;
+  }
+  html,
+  body {
+    height: auto !important;
+    overflow: visible !important;
+    background: #ffffff !important;
+  }
+  body > *:not(.print-root) {
+    display: none !important;
+  }
+  .print-root {
+    display: block;
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
   }
 }

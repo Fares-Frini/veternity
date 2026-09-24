@@ -6,7 +6,13 @@ import { SPECIES_COLOR, SPECIES_ICON } from "../../../../animaux/_components/uti
 import type { Consultation } from "./data";
 import { STATUS_META, formatDate } from "./utils";
 
-export function ConsultationsTable({ consultations }: { consultations: Consultation[] }) {
+export function ConsultationsTable({
+  consultations,
+  onSelect,
+}: {
+  consultations: Consultation[];
+  onSelect?: (consultation: Consultation) => void;
+}) {
   return (
     <Table>
       <TableHeader>
@@ -25,7 +31,19 @@ export function ConsultationsTable({ consultations }: { consultations: Consultat
           const speciesIcon = SPECIES_ICON[c.species];
           const status = STATUS_META[c.status];
           return (
-            <TableRow key={c.id} className="border-border">
+            <TableRow
+              key={c.id}
+              tabIndex={onSelect ? 0 : undefined}
+              onClick={() => onSelect?.(c)}
+              onKeyDown={(e) => {
+                if (onSelect && (e.key === "Enter" || e.key === " ")) {
+                  e.preventDefault();
+                  onSelect(c);
+                }
+              }}
+              aria-label={onSelect ? `Voir la consultation de ${c.animal} du ${formatDate(c.date)}` : undefined}
+              className={`border-border ${onSelect ? "cursor-pointer outline-none focus-visible:bg-muted" : ""}`}
+            >
               <TableCell className="pl-5">
                 <div className="flex items-center gap-2.5">
                   <Avatar className="h-8 w-8">

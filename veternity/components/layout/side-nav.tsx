@@ -114,7 +114,7 @@ export default function SideNav() {
       onClick={() => {
         if (collapsed) setCollapsed(false);
       }}
-      className={`flex h-full shrink-0 flex-col bg-sidebar transition-[width,background-color] duration-300 ease-out ${
+      className={`flex h-full shrink-0 flex-col border-r border-sidebar-border bg-sidebar transition-[width,background-color] duration-300 ease-out ${
         collapsed ? "w-18" : "w-64"
       }`}
     >
@@ -136,7 +136,7 @@ export default function SideNav() {
       <nav ref={navRef} className="relative flex flex-1 flex-col gap-1.5 overflow-y-auto px-3 pt-2">
         <span
           aria-hidden
-          className="pointer-events-none absolute rounded-md bg-sidebar-primary shadow-[inset_0_3px_6px_rgba(0,0,0,0.4),inset_0_1px_2px_rgba(0,0,0,0.3),inset_0_-1px_1px_rgba(255,255,255,0.5)] transition-[top,left,width,height,opacity] duration-300 ease-out"
+          className="pointer-events-none absolute rounded-md bg-sidebar-primary shadow-[0_4px_12px_-2px_color-mix(in_srgb,var(--sidebar-primary)_45%,transparent)] transition-[top,left,width,height,opacity] duration-300 ease-out"
           style={{
             top: indicator?.top ?? 0,
             left: indicator?.left ?? 0,

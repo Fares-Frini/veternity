@@ -25,6 +25,7 @@ interface ClientsCardProps {
   onSearchChange: (value: string) => void;
   clients: Client[];
   pageClients: Client[];
+  onRowClick?: (client: Client) => void;
   page: number;
   totalPages: number;
   onPageChange: (page: number) => void;
@@ -40,6 +41,7 @@ export function ClientsCard({
   onSearchChange,
   clients,
   pageClients,
+  onRowClick,
   page,
   totalPages,
   onPageChange,
@@ -69,7 +71,7 @@ export function ClientsCard({
         {headerAction}
       </div>
 
-      <ClientsTable clients={pageClients} />
+      <ClientsTable clients={pageClients} onRowClick={onRowClick} />
 
       <div className="flex flex-wrap items-center justify-between gap-4 border-t border-border px-4 py-3">
         <div className="flex items-center gap-2 text-sm text-muted-foreground">

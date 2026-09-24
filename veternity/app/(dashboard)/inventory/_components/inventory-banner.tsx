@@ -1,5 +1,8 @@
 import AnimatedCharacters from "@/components/animated-characters/AnimatedCharacters";
 import { BoxIcon } from "@/components/layout/icons";
+import { Upload04Icon } from "@hugeicons/core-free-icons";
+import { HugeiconsIcon } from "@hugeicons/react";
+import Link from "next/link";
 
 export function InventoryBanner() {
   return (
@@ -11,6 +14,17 @@ export function InventoryBanner() {
         <AnimatedCharacters entrance mirrored characters={["horse"]} />
       </div>
 
+      <div className="absolute top-4 right-4 z-10 flex items-center gap-2">
+        <Link
+          href="/inventory/factures"
+          aria-label="Importer une facture fournisseur"
+          title="Importer une facture fournisseur"
+          className="flex h-9 w-9 items-center justify-center rounded-full bg-primary-foreground/15 backdrop-blur-sm transition-colors hover:bg-primary-foreground/25"
+        >
+          <HugeiconsIcon icon={Upload04Icon} className="h-4 w-4" strokeWidth={2.4} />
+        </Link>
+      </div>
+
       <div className="relative z-10">
         <span className="inline-flex items-center gap-1.5 rounded-full bg-primary-foreground/15 px-3 py-1.5 text-xs font-semibold backdrop-blur-sm">
           <BoxIcon className="h-3.5 w-3.5" strokeWidth={2.4} />
@@ -18,7 +32,7 @@ export function InventoryBanner() {
         </span>
         <h1 className="mt-4 text-3xl font-extrabold tracking-tight">Inventaire</h1>
         <p className="mt-1.5 max-w-md text-sm text-primary-foreground/80">
-          Stock, achats, ventes, factures et fournisseurs de la clinique.
+          Stock de médicaments, ventes et achats, factures fournisseurs et fournisseurs de la clinique.
         </p>
       </div>
     </div>

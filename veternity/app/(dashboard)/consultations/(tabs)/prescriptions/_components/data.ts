@@ -1,3 +1,13 @@
+export interface PrescriptionLine {
+  name: string;
+  posology: string;
+  duration: string;
+  /** Présent quand le médicament vient du stock de la clinique. */
+  productId?: string;
+  /** Quantité délivrée par la clinique (et donc facturée), 0 sinon. */
+  dispensedQuantity: number;
+}
+
 export interface Prescription {
   id: string;
   animal: string;
@@ -7,6 +17,9 @@ export interface Prescription {
   posology: string;
   date: string;
   vet: string;
+  lines?: PrescriptionLine[];
+  notes?: string;
+  consultationId?: string;
 }
 
 export const PRESCRIPTIONS: Prescription[] = [

@@ -12,6 +12,10 @@ export interface Appointment {
   status: AppointmentStatus;
 }
 
+export interface MovedAppointment extends Appointment {
+  ghostId: string;
+}
+
 export const VETS = ["Dr. Kadiri", "Dr. Amrani"];
 
 export const APPOINTMENTS: Appointment[] = [

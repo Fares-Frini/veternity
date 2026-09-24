@@ -15,11 +15,16 @@ function groupByDate(appointments: Appointment[]) {
   return [...map.entries()].sort(([dateA], [dateB]) => dateA.localeCompare(dateB));
 }
 
-function AppointmentRow({ appointment }: { appointment: Appointment }) {
+function AppointmentRow({ appointment, onClick }: { appointment: Appointment; onClick?: (appointment: Appointment) => void }) {
   const status = STATUS_META[appointment.status];
 
   return (
-    <div className="flex items-center gap-4 rounded-lg border border-border bg-card p-3 shadow-sm transition-shadow hover:shadow-md">
+    <div
+      onClick={onClick ? () => onClick(appointment) : undefined}
+      className={`flex items-center gap-4 rounded-lg border border-border bg-card p-3 shadow-sm transition-shadow hover:shadow-md ${
+        onClick ? "cursor-pointer" : ""
+      }`}
+    >
       <div className="w-12 shrink-0 text-center text-sm font-bold text-foreground">{appointment.time}</div>
 
       <span className={`h-10 w-1 shrink-0 rounded-full ${status.bar}`} />
@@ -50,7 +55,13 @@ function AppointmentRow({ appointment }: { appointment: Appointment }) {
   );
 }
 
-export function AppointmentsAgenda({ appointments }: { appointments: Appointment[] }) {
+export function AppointmentsAgenda({
+  appointments,
+  onAppointmentClick,
+}: {
+  appointments: Appointment[];
+  onAppointmentClick?: (appointment: Appointment) => void;
+}) {
   if (appointments.length === 0) {
     return (
       <div className="py-16 text-center text-sm text-muted-foreground">
@@ -83,7 +94,7 @@ export function AppointmentsAgenda({ appointments }: { appointments: Appointment
 
             <div className="flex flex-col gap-2">
               {dayAppointments.map((appointment) => (
-                <AppointmentRow key={appointment.id} appointment={appointment} />
+                <AppointmentRow key={appointment.id} appointment={appointment} onClick={onAppointmentClick} />
               ))}
             </div>
           </div>

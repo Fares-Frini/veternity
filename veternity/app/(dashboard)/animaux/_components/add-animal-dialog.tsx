@@ -32,6 +32,7 @@ import {
     Scissor01Icon,
     Search01Icon,
     StethoscopeIcon,
+    UserGroupIcon,
     UserIcon,
     VaccineIcon,
 } from "@hugeicons/core-free-icons";
@@ -72,8 +73,28 @@ const SPECIES_THEME: Record<string, { gradient: string; accent: string; soft: st
     accent: "#16a34a",
     soft: "border-status-success/40 bg-status-success-bg text-status-success",
   },
+  Mouton: {
+    gradient: "from-[#c9974f] via-[#a3763a] to-[#7d5a2c]",
+    accent: "#a3763a",
+    soft: "border-status-brown/40 bg-status-brown-bg text-status-brown",
+  },
+  Vache: {
+    gradient: "from-[#4ade80] via-[#16a34a] to-[#0f7a37]",
+    accent: "#16a34a",
+    soft: "border-status-success/40 bg-status-success-bg text-status-success",
+  },
+  "Chèvre": {
+    gradient: "from-[#ffab3d] via-[#f5920a] to-[#d97a00]",
+    accent: "#f5920a",
+    soft: "border-status-warning/40 bg-status-warning-bg text-status-warning",
+  },
+  Volaille: {
+    gradient: "from-[#f7a8d8] via-[#e879b9] to-[#c4489a]",
+    accent: "#e879b9",
+    soft: "border-status-pink/40 bg-status-pink-bg text-status-pink",
+  },
 };
-const ESPECE_OPTIONS = [
+const ESPECE_INDIVIDUEL = [
   { value: "Chat", icon: CatIcon },
   { value: "Chien", icon: FootprintsIcon },
   { value: "Lapin", icon: CarrotIcon },
@@ -82,9 +103,22 @@ const ESPECE_OPTIONS = [
   { value: "Reptile", icon: EggIcon },
 ] as const;
 
+const ESPECE_TROUPEAU = [
+  { value: "Mouton", icon: FootprintsIcon },
+  { value: "Vache", icon: FootprintsIcon },
+  { value: "Chèvre", icon: FootprintsIcon },
+  { value: "Volaille", icon: BirdIcon },
+] as const;
+
+const KIND_OPTIONS = [
+  { value: "individuel" as const, label: "Individuel", hint: "Un seul animal", icon: UserIcon },
+  { value: "troupeau" as const, label: "Troupeau / lot", hint: "Plusieurs têtes", icon: UserGroupIcon },
+];
+
 const SEXE_OPTIONS = [
   { value: "M" as const, label: "Mâle", icon: MaleSymbolIcon, soft: "border-status-info/40 bg-status-info-bg text-status-info" },
   { value: "F" as const, label: "Femelle", icon: FemaleSymbolIcon, soft: "border-status-pink/40 bg-status-pink-bg text-status-pink" },
+  { value: "Mixte" as const, label: "Mixte", icon: UserGroupIcon, soft: "border-status-brown/40 bg-status-brown-bg text-status-brown" },
 ];
 
 const ALLERGY_SUGGESTIONS = ["Pénicilline", "Pollen", "Acariens", "Puces", "Produits laitiers", "Poulet"];
@@ -99,10 +133,12 @@ const HISTORY_SUGGESTIONS = [
 ];
 
 const EMPTY_FORM = {
+  kind: "individuel" as "individuel" | "troupeau",
   name: "",
+  count: "",
   species: "" as string,
   breed: "",
-  sex: "" as "" | "M" | "F",
+  sex: "" as "" | "M" | "F" | "Mixte",
   coat: "",
   birthDate: "",
   weightKg: "",
@@ -201,7 +237,14 @@ export function AddAnimalDialog({ owners, onAdd, onAddClient, trigger }: AddAnim
   const [ownerOpen, setOwnerOpen] = useState(false);
   const [addClientOpen, setAddClientOpen] = useState(false);
 
-  const avatarIcon = ESPECE_OPTIONS.find((o) => o.value === form.species)?.icon ?? FootprintsIcon;
+  const isHerd = form.kind === "troupeau";
+  const especeOptions = isHerd ? ESPECE_TROUPEAU : ESPECE_INDIVIDUEL;
+  const sexeOptions = isHerd ? SEXE_OPTIONS : SEXE_OPTIONS.filter((o) => o.value !== "Mixte");
+  const avatarIcon =
+    [...ESPECE_INDIVIDUEL, ...ESPECE_TROUPEAU].find((o) => o.value === form.species)?.icon ?? FootprintsIcon;
+
+  const setKind = (kind: "individuel" | "troupeau") =>
+    setForm((f) => ({ ...f, kind, species: "", sex: "", count: kind === "troupeau" ? f.count : "" }));
 
   const ownerQuery = form.owner.trim().toLowerCase();
   const filteredOwners = ownerQuery
@@ -209,7 +252,10 @@ export function AddAnimalDialog({ owners, onAdd, onAddClient, trigger }: AddAnim
     : owners;
   const ownerExists = owners.some((owner) => owner.toLowerCase() === ownerQuery);
 
-  const canSubmit = form.name.trim() !== "" && form.species !== "" && form.sex !== "";
+  const canSubmit =
+    form.name.trim() !== "" &&
+    form.species !== "" &&
+    (isHerd ? Number(form.count) > 0 : form.sex !== "");
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
@@ -217,12 +263,14 @@ export function AddAnimalDialog({ owners, onAdd, onAddClient, trigger }: AddAnim
 
     onAdd({
       id: `A${Math.floor(1000 + Math.random() * 9000)}`,
+      kind: form.kind,
       name: form.name.trim(),
-      sex: form.sex as "M" | "F",
+      count: isHerd ? Math.max(1, Math.round(Number(form.count))) : 1,
+      sex: (form.sex || (isHerd ? "Mixte" : "M")) as "M" | "F" | "Mixte",
       species: form.species,
       breed: form.breed.trim() || "—",
       coat: form.coat.trim() || "—",
-      birthDate: form.birthDate || new Date().toISOString().slice(0, 10),
+      birthDate: form.birthDate || (isHerd ? "" : new Date().toISOString().slice(0, 10)),
       weightKg: form.weightKg ? Number(form.weightKg) : 0,
       owner: form.owner.trim() || "—",
     });
@@ -255,7 +303,9 @@ export function AddAnimalDialog({ owners, onAdd, onAddClient, trigger }: AddAnim
       <DialogContent className="max-h-[94vh] w-full max-w-5xl gap-0 overflow-y-auto rounded-lg p-0 sm:max-w-5xl" showCloseButton={false}>
         <div className="relative flex items-center justify-between bg-primary px-6 py-1.5 text-primary-foreground">
           <DialogHeader className="gap-0">
-            <DialogTitle className="text-sm font-bold text-primary-foreground">Ajouter un animal</DialogTitle>
+            <DialogTitle className="text-sm font-bold text-primary-foreground">
+              {isHerd ? "Ajouter un lot / troupeau" : "Ajouter un animal"}
+            </DialogTitle>
           </DialogHeader>
 
           <button
@@ -272,7 +322,39 @@ export function AddAnimalDialog({ owners, onAdd, onAddClient, trigger }: AddAnim
           <div className="grid grid-cols-2 gap-x-10 gap-y-6">
             <div className="flex flex-col gap-6">
               <div className="flex flex-col gap-4 rounded-xl border border-border bg-muted p-5">
-                <SectionLabel icon={PawIcon} title="Identité" hint="Nom, espèce, race et sexe de l'animal" />
+                <SectionLabel
+                  icon={PawIcon}
+                  title="Identité"
+                  hint={isHerd ? "Type, effectif, espèce et race du lot" : "Nom, espèce, race et sexe de l'animal"}
+                />
+
+                <div className="flex flex-col gap-1.5">
+                  <Label>Type de dossier *</Label>
+                  <div className="grid grid-cols-2 gap-2">
+                    {KIND_OPTIONS.map(({ value, label, hint, icon }) => {
+                      const isSelected = form.kind === value;
+                      return (
+                        <button
+                          key={value}
+                          type="button"
+                          onClick={() => setKind(value)}
+                          className={cn(
+                            "flex items-center gap-2 rounded-lg border px-3 py-2.5 text-left transition-colors",
+                            isSelected
+                              ? "border-primary/40 bg-secondary text-secondary-foreground"
+                              : "border-border bg-card text-muted-foreground hover:bg-muted",
+                          )}
+                        >
+                          <HugeiconsIcon icon={icon} className="h-4 w-4 shrink-0" strokeWidth={2.2} />
+                          <span className="flex flex-col leading-tight">
+                            <span className="text-sm font-semibold">{label}</span>
+                            <span className="text-[11px] text-muted-foreground">{hint}</span>
+                          </span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
 
                 <div className="flex items-end gap-3">
                   <button
@@ -286,22 +368,39 @@ export function AddAnimalDialog({ owners, onAdd, onAddClient, trigger }: AddAnim
                   </button>
 
                   <div className="flex flex-1 flex-col gap-1.5">
-                    <Label htmlFor="animal-name">Nom de l&apos;animal *</Label>
+                    <Label htmlFor="animal-name">{isHerd ? "Nom du lot *" : "Nom de l'animal *"}</Label>
                     <Input
                       id="animal-name"
                       value={form.name}
                       onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))}
-                      placeholder="Ex: Luna"
+                      placeholder={isHerd ? "Ex: Troupeau ovin Nord" : "Ex: Luna"}
                       className="h-11 bg-white"
                       required
                     />
                   </div>
+
+                  {isHerd && (
+                    <div className="flex w-28 shrink-0 flex-col gap-1.5">
+                      <Label htmlFor="animal-count">Effectif *</Label>
+                      <Input
+                        id="animal-count"
+                        type="number"
+                        min="1"
+                        step="1"
+                        value={form.count}
+                        onChange={(e) => setForm((f) => ({ ...f, count: e.target.value }))}
+                        placeholder="Ex: 50"
+                        className="h-11 bg-white"
+                        required
+                      />
+                    </div>
+                  )}
                 </div>
 
                 <div className="flex flex-col gap-1.5">
                   <Label>Espèce *</Label>
-                  <div className="grid grid-cols-6 gap-1">
-                    {ESPECE_OPTIONS.map(({ value, icon }) => {
+                  <div className={cn("grid gap-1", isHerd ? "grid-cols-4" : "grid-cols-6")}>
+                    {especeOptions.map(({ value, icon }) => {
                       const isSelected = form.species === value;
                       return (
                         <button
@@ -334,9 +433,9 @@ export function AddAnimalDialog({ owners, onAdd, onAddClient, trigger }: AddAnim
                   </div>
 
                   <div className="flex flex-col gap-1.5">
-                    <Label>Sexe *</Label>
-                    <div className="grid grid-cols-2 gap-2">
-                      {SEXE_OPTIONS.map(({ value, label, icon, soft }) => {
+                    <Label>{isHerd ? "Sexe" : "Sexe *"}</Label>
+                    <div className={cn("grid gap-2", isHerd ? "grid-cols-3" : "grid-cols-2")}>
+                      {sexeOptions.map(({ value, label, icon, soft }) => {
                         const isSelected = form.sex === value;
                         return (
                           <button
@@ -450,7 +549,7 @@ export function AddAnimalDialog({ owners, onAdd, onAddClient, trigger }: AddAnim
 
                 <div className="grid grid-cols-2 gap-4">
                   <div className="flex flex-col gap-1.5">
-                    <Label htmlFor="animal-birthdate">Date de naissance</Label>
+                    <Label htmlFor="animal-birthdate">{isHerd ? "Naissance (approx.)" : "Date de naissance"}</Label>
                     <Input
                       id="animal-birthdate"
                       type="date"
@@ -460,7 +559,7 @@ export function AddAnimalDialog({ owners, onAdd, onAddClient, trigger }: AddAnim
                     />
                   </div>
                   <div className="flex flex-col gap-1.5">
-                    <Label htmlFor="animal-weight">Poids (kg)</Label>
+                    <Label htmlFor="animal-weight">{isHerd ? "Poids moyen / tête (kg)" : "Poids (kg)"}</Label>
                     <Input
                       id="animal-weight"
                       type="number"
@@ -567,7 +666,7 @@ export function AddAnimalDialog({ owners, onAdd, onAddClient, trigger }: AddAnim
                   className="gap-1.5 bg-primary hover:bg-primary/90"
                 >
                   <HugeiconsIcon icon={FloppyDiskIcon} className="h-4 w-4" strokeWidth={2.2} />
-                  Enregistrer l&apos;animal
+                  {isHerd ? "Enregistrer le lot" : "Enregistrer l'animal"}
                 </Button>
               </div>
             </div>

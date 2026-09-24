@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowLeft01Icon, ArrowRight01Icon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { useMemo, useState } from "react";
-import type { Appointment } from "./data";
+import type { Appointment, MovedAppointment } from "./data";
 import { todayKey as getTodayKey, STATUS_META, toDateKey } from "./utils";
 
 const WEEKDAY_LABELS = ["Lun", "Mar", "Mer", "Jeu", "Ven", "Sam", "Dim"];
@@ -29,7 +29,19 @@ function buildMonthCells(year: number, month: number) {
   return cells;
 }
 
-export function AppointmentsCalendar({ appointments }: { appointments: Appointment[] }) {
+interface CalendarEntry {
+  key: string;
+  appointment: Appointment;
+  isGhost: boolean;
+}
+
+interface AppointmentsCalendarProps {
+  appointments: Appointment[];
+  movedAppointments?: MovedAppointment[];
+  onAppointmentClick?: (appointment: Appointment) => void;
+}
+
+export function AppointmentsCalendar({ appointments, movedAppointments, onAppointmentClick }: AppointmentsCalendarProps) {
   const [cursor, setCursor] = useState(() => {
     const first = appointments[0];
     return first ? new Date(first.date) : new Date();
@@ -39,15 +51,20 @@ export function AppointmentsCalendar({ appointments }: { appointments: Appointme
   const month = cursor.getMonth();
 
   const byDate = useMemo(() => {
-    const map = new Map<string, Appointment[]>();
+    const map = new Map<string, CalendarEntry[]>();
     for (const appointment of appointments) {
       const list = map.get(appointment.date) ?? [];
-      list.push(appointment);
+      list.push({ key: appointment.id, appointment, isGhost: false });
       map.set(appointment.date, list);
     }
-    for (const list of map.values()) list.sort((a, b) => a.time.localeCompare(b.time));
+    for (const ghost of movedAppointments ?? []) {
+      const list = map.get(ghost.date) ?? [];
+      list.push({ key: ghost.ghostId, appointment: ghost, isGhost: true });
+      map.set(ghost.date, list);
+    }
+    for (const list of map.values()) list.sort((a, b) => a.appointment.time.localeCompare(b.appointment.time));
     return map;
-  }, [appointments]);
+  }, [appointments, movedAppointments]);
 
   const cells = useMemo(() => buildMonthCells(year, month), [year, month]);
 
@@ -125,16 +142,29 @@ export function AppointmentsCalendar({ appointments }: { appointments: Appointme
               </span>
 
               <div className="flex flex-col gap-0.5">
-                {dayAppointments.slice(0, MAX_VISIBLE_PER_DAY).map((appointment) => {
+                {dayAppointments.slice(0, MAX_VISIBLE_PER_DAY).map(({ key: entryKey, appointment, isGhost }) => {
                   const status = STATUS_META[appointment.status];
+                  if (isGhost) {
+                    return (
+                      <div
+                        key={entryKey}
+                        title={`${appointment.time} · ${appointment.animal} · déplacé`}
+                        className="truncate rounded px-1.5 py-0.5 text-[11px] font-medium text-muted-foreground/60 line-through decoration-muted-foreground/60"
+                      >
+                        {appointment.time} {appointment.animal}
+                      </div>
+                    );
+                  }
                   return (
-                    <div
-                      key={appointment.id}
+                    <button
+                      key={entryKey}
+                      type="button"
                       title={`${appointment.time} · ${appointment.animal} · ${appointment.reason}`}
-                      className={`truncate rounded px-1.5 py-0.5 text-[11px] font-medium ${status.bg} ${status.text}`}
+                      onClick={() => onAppointmentClick?.(appointment)}
+                      className={`truncate rounded px-1.5 py-0.5 text-left text-[11px] font-medium transition-opacity hover:opacity-80 ${status.bg} ${status.text}`}
                     >
                       {appointment.time} {appointment.animal}
-                    </div>
+                    </button>
                   );
                 })}
                 {dayAppointments.length > MAX_VISIBLE_PER_DAY && (

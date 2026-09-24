@@ -1,11 +1,16 @@
 import { BirdIcon, CarrotIcon, CatIcon, FootprintsIcon } from "@hugeicons/core-free-icons";
 import type { IconSvgElement } from "@hugeicons/react";
+import type { Animal } from "./data";
 
 export const SPECIES_COLOR: Record<string, string> = {
   Chat: "bg-status-purple-bg text-status-purple",
   Chien: "bg-status-info-bg text-status-info",
   Lapin: "bg-status-warning-bg text-status-warning",
   Oiseau: "bg-secondary text-secondary-foreground",
+  Mouton: "bg-status-brown-bg text-status-brown",
+  Vache: "bg-status-success-bg text-status-success",
+  Chèvre: "bg-status-warning-bg text-status-warning",
+  Volaille: "bg-status-pink-bg text-status-pink",
 };
 
 export const SPECIES_ICON: Record<string, IconSvgElement> = {
@@ -13,7 +18,15 @@ export const SPECIES_ICON: Record<string, IconSvgElement> = {
   Chien: FootprintsIcon,
   Lapin: CarrotIcon,
   Oiseau: BirdIcon,
+  Mouton: FootprintsIcon,
+  Vache: FootprintsIcon,
+  Chèvre: FootprintsIcon,
+  Volaille: BirdIcon,
 };
+
+export function isHerd(animal: Animal) {
+  return animal.kind === "troupeau";
+}
 
 export function formatDate(date: string) {
   return new Date(date).toLocaleDateString("fr-FR", {
@@ -21,6 +34,19 @@ export function formatDate(date: string) {
     month: "2-digit",
     year: "numeric",
   });
+}
+
+/** Effectif lisible : "1" pour un individuel, "52 têtes" pour un troupeau. */
+export function formatCount(animal: Animal) {
+  if (animal.kind === "individuel") return "1";
+  return `${new Intl.NumberFormat("fr-FR").format(animal.count)} têtes`;
+}
+
+/** Poids affiché : "4.2 kg" pour un individuel, "~45 kg / tête" pour un troupeau. */
+export function formatWeight(animal: Animal) {
+  if (!animal.weightKg) return "—";
+  if (animal.kind === "individuel") return `${animal.weightKg} kg`;
+  return `~${animal.weightKg} kg / tête`;
 }
 
 export function getPageNumbers(current: number, total: number): (number | null)[] {
