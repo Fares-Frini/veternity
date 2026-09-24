@@ -59,7 +59,14 @@ Chaque choix est motivé ; ceux qui demandent ton arbitrage sont repris en [sect
 | `veternity` (existant) | Frontend Next.js | Image `web` |
 | `veternity-api` (nouveau) | API NestJS, schéma Prisma, `docker-compose.yml` de l'infrastructure, documentation de la base | Image `api` + migrations |
 
-Chaque dépôt a son `package.json`, sa CI et son cycle de version. **L'API est propriétaire de la base de données** : `docs/database/SCHEMA.md` et `docs/PLAN-BACKEND.md` rejoignent le dépôt `veternity-api` dès sa création (Phase 0).
+Chaque dépôt a son `package.json`, sa CI et son cycle de version. `veternity`, `veternity-api` et `docs/` sont
+co-localisés dans le même dossier `vet/` sur le disque (confort de l'IDE, un seul endroit à ouvrir), mais restent
+distincts : `vet/` est le dépôt Git qui suit `veternity/` et `docs/` directement, `veternity-api/` a son propre
+`.git` indépendant et est exclu par `vet/.gitignore` (sans quoi il apparaîtrait comme un sous-module cassé — le
+piège qu'était `animated-login`, retiré). `docs/` n'est pas dupliqué dans `veternity-api/` : **l'API est
+propriétaire du contenu** de `docs/database/SCHEMA.md` (toute évolution du schéma y commence), mais le dossier
+physique reste au même endroit, référencé par les deux dépôts avec un chemin relatif (`../docs/...` depuis
+`veternity-api/`, `../docs/...` depuis `veternity/`).
 
 **Contrat entre les deux :** l'API décrit ses entrées et sorties avec Zod (`nestjs-zod`), ce qui produit un document **OpenAPI**. Le frontend en **génère ses types** avec `openapi-typescript` (script `pnpm api:types`, fichier généré `lib/api/schema.d.ts`, commité). Un champ renommé côté API fait échouer le typecheck du frontend à la régénération, avant d'arriver en production.
 
@@ -107,29 +114,34 @@ Toutes les tables métier portent un `clinicId`, et chaque requête est filtrée
 
 ## 3. Organisation des dépôts et des dossiers
 
-### 3.1 Les deux dépôts
+### 3.1 Trois dossiers, deux dépôts Git, un seul emplacement disque
 
 ```
-veternity/                      # dépôt frontend (existant)
-├── app/  components/  lib/  public/
-├── proxy.ts
-├── .env.example                # NEXT_PUBLIC_*, API_INTERNAL_URL
-└── .github/workflows/ci.yml
-
-veternity-api/                  # dépôt API (nouveau)
-├── src/  prisma/  test/        # détaillés en 3.2
-├── docs/
+vet/                             # dossier parent, pas un dépôt commun aux trois
+├── .gitignore                   # exclut /veternity-api/ du dépôt racine
+├── docs/                        # PARTAGÉ — un seul exemplaire, suivi par le dépôt racine (vet/)
+│   ├── STATUS.md                # point d'entrée — voir ce fichier en premier
 │   ├── PLAN-BACKEND.md
-│   ├── database/SCHEMA.md      # référence du modèle de données
-│   └── adr/                    # décisions d'architecture (1 fichier par décision)
-├── docker/
-│   └── Dockerfile
-├── docker-compose.yml          # infra de dev : postgres, redis, mailpit
-├── docker-compose.test.yml     # base jetable pour les tests e2e
-├── openapi.json                # contrat publié, régénéré par script
-├── .env.example
-└── .github/workflows/ci.yml
+│   ├── database/SCHEMA.md       # référence du modèle de données
+│   └── adr/                     # décisions d'architecture (1 fichier par décision)
+├── veternity/                   # dépôt frontend — fait partie du dépôt racine vet/
+│   ├── app/  components/  lib/  public/
+│   ├── proxy.ts
+│   ├── .env.example             # NEXT_PUBLIC_*, API_INTERNAL_URL
+│   └── .github/workflows/ci.yml
+└── veternity-api/                # dépôt API — .git INDÉPENDANT, ignoré par le dépôt racine
+    ├── src/  prisma/  test/     # détaillés en 3.2
+    ├── docker/
+    │   └── Dockerfile
+    ├── docker-compose.yml       # infra de dev : postgres, redis, mailpit
+    ├── docker-compose.test.yml  # base jetable pour les tests e2e
+    ├── openapi.json             # contrat publié, régénéré par script
+    ├── .env.example
+    └── .github/workflows/ci.yml
 ```
+
+Deux dépôts Git au total (`git init` a été fait séparément dans `vet/` et dans `vet/veternity-api/`), pas trois —
+`docs/` n'est pas un dépôt, juste un dossier partagé suivi par celui de `vet/`.
 
 ### 3.2 API — `veternity-api`
 

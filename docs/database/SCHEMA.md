@@ -4,7 +4,9 @@
 > Toute modification du modèle commence ici (diagramme + règles), dans la même pull request que la migration Prisma.
 > Voir [`../STATUS.md`](../STATUS.md) pour l'état d'avancement général du projet.
 
-Base : PostgreSQL 16 · ORM : Prisma · Extensions : `citext`, `pg_trgm`, `btree_gist`.
+Base : PostgreSQL 16 · ORM : Prisma · Extensions : `pg_trgm`, `btree_gist`.
+
+> **Adresses e-mail :** pas d'extension `citext`. Prisma exclut un champ `Unsupported("citext")` des types de création/mise à jour du client généré, ce qui le rend impraticable pour une colonne que le service écrit couramment (adresse e-mail d'un utilisateur, d'un client, d'un fournisseur). Convention à la place : colonne `string`, normalisée en minuscule par le service avant toute écriture et toute lecture, avec un index **unique fonctionnel** `lower(colonne)` posé en SQL de migration (section 14) pour la garantie en base.
 
 Les diagrammes sont en Mermaid : GitHub les affiche directement ; dans VS Code, installer l'extension *Markdown Preview Mermaid Support*.
 
@@ -46,6 +48,7 @@ Les diagrammes sont en Mermaid : GitHub les affiche directement ; dans VS Code, 
 | Suppression | Pas de suppression physique des données métier : `archived_at` (clients, animaux, produits, fournisseurs) ou statut `CANCELLED`. Utilisateurs : `status = DISABLED`. Journaux : ajout seul |
 | Clés étrangères | `ON DELETE RESTRICT` par défaut. `CASCADE` uniquement pour les enfants sans existence propre (lignes d'un brouillon, sessions d'un utilisateur) |
 | Valeurs figées | Un document émis (acte, facture, ordonnance) **copie** les libellés et les prix au moment de l'émission ; il ne dépend plus du catalogue ensuite |
+| E-mails | Toujours stockés en minuscule ; unicité insensible à la casse via un index `lower(email)`, jamais via `citext` (voir la note en tête de document) |
 
 Notation des diagrammes : `PK` clé primaire, `FK` clé étrangère, `UK` unique. Les commentaires entre guillemets précisent le type SQL ou la règle.
 
@@ -118,7 +121,7 @@ erDiagram
   users {
     uuid id PK
     uuid clinic_id FK
-    citext email UK "identifiant de connexion"
+    string email UK "identifiant de connexion ; normalisée en minuscule, index unique sur lower(email)"
     string first_name
     string last_name
     string title "ex : Dr."
@@ -204,7 +207,7 @@ erDiagram
     string company_name "BUSINESS"
     string ice "BUSINESS, pour les factures"
     string phone
-    citext email "unique par clinique si renseigné"
+    string email "normalisée en minuscule ; unique par clinique via lower(email) si renseigné"
     string address
     string city
     string notes
@@ -544,7 +547,7 @@ erDiagram
     SupplierKind kind
     string contact_name
     string phone
-    citext email
+    string email "normalisée en minuscule"
     string address
     string city
     string ice
@@ -867,7 +870,6 @@ Prisma ne sait pas exprimer ces éléments : ils sont ajoutés à la main dans l
 
 ```sql
 -- Extensions (migration initiale)
-CREATE EXTENSION IF NOT EXISTS citext;
 CREATE EXTENSION IF NOT EXISTS pg_trgm;
 CREATE EXTENSION IF NOT EXISTS btree_gist;
 
@@ -903,12 +905,15 @@ ALTER TABLE invoices ADD CONSTRAINT issued_invoice_has_number
   CHECK (status = 'DRAFT' OR number IS NOT NULL);
 ALTER TABLE payments ADD CONSTRAINT payments_positive CHECK (amount > 0);
 
--- Unicités partielles
-CREATE UNIQUE INDEX clients_email_per_clinic ON clients (clinic_id, email)
+-- Unicités
+CREATE UNIQUE INDEX users_email_unique_ci ON users (lower(email));  -- R21-adjacent : unicité globale, insensible à la casse
+CREATE UNIQUE INDEX clients_email_per_clinic ON clients (clinic_id, lower(email))
   WHERE email IS NOT NULL AND archived_at IS NULL;
 CREATE UNIQUE INDEX animals_microchip_per_clinic ON animals (clinic_id, microchip_number)
   WHERE microchip_number IS NOT NULL;
 CREATE UNIQUE INDEX products_code_per_clinic ON products (clinic_id, code) WHERE code IS NOT NULL;
+CREATE UNIQUE INDEX suppliers_email_per_clinic ON suppliers (clinic_id, lower(email))
+  WHERE email IS NOT NULL AND archived_at IS NULL;
 CREATE UNIQUE INDEX supplier_invoice_integrated_once
   ON supplier_invoices (clinic_id, supplier_id, invoice_number) WHERE status = 'INTEGRATED';  -- R15
 

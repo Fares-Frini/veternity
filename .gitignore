@@ -1,0 +1,5 @@
+# veternity-api est un dépôt Git séparé (sa propre racine .git), volontairement
+# co-localisé ici sur le disque pour plus de confort — voir docs/STATUS.md.
+# Il ne doit jamais être suivi par CE dépôt (celui qui suit veternity/ et docs/) :
+# le suivre ici en referait un sous-module/gitlink cassé, comme l'était animated-login.
+/veternity-api/
